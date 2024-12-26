@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server"
 
-const openai = new OpenAI({apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,});
+const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY,});
 
 async function chat(content:string) {
     const completion = openai.chat.completions.create({
@@ -27,3 +27,6 @@ export async function POST(request:Request) {
 
 
 }
+
+
+
