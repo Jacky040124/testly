@@ -8,9 +8,10 @@ import { getData } from "./action";
 import { UserData } from "@/components/UserData";
 
 export default function Home() {
+  // api key added to vercel
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
-  const [data, setData] = useState("")
+  const [data, setData] = useState("");
   const { user } = useUser();
 
   const handleSubmit = async () => {
@@ -20,8 +21,7 @@ export default function Home() {
 
   const handleGetData = async () => {
     setData(await getData());
-
-  }
+  };
 
   return (
     <div>
