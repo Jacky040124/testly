@@ -3,19 +3,55 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --duo-green: #58CC02;
+  --duo-green-hover: #47B502;
+  --duo-background: #FFF;
+  --duo-gray-100: #F7F7F7;
+  --duo-gray-200: #E5E5E5;
+  --duo-gray-300: #AFAFAF;
+  --duo-gray-400: #777777;
+  --duo-correct: #58CC02;
+  --duo-incorrect: #FF4B4B;
+  --duo-blue: #1CB0F6;
+  --duo-blue-hover: #14A1E3;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--duo-background);
+  font-family: 'DIN Round Pro', system-ui, sans-serif;
+}
+
+.duo-button {
+  @apply font-bold text-white px-6 py-3 rounded-2xl border-b-4 active:border-b-0 active:mt-1 transition-all duration-100;
+  background-color: var(--duo-green);
+  border-bottom-color: var(--duo-green-hover);
+}
+
+.duo-button:hover {
+  background-color: var(--duo-green-hover);
+}
+
+.duo-button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.duo-button-white {
+  @apply font-bold px-6 py-3 rounded-2xl border-2 transition-all duration-100 bg-white;
+  color: var(--duo-gray-400);
+  border-color: var(--duo-gray-200);
+}
+
+.duo-button-white:hover {
+  @apply bg-[var(--duo-gray-100)];
+  border-color: var(--duo-gray-300);
+}
+
+.duo-button-blue {
+  @apply font-bold text-white px-6 py-3 rounded-2xl border-b-4 active:border-b-0 active:mt-1 transition-all duration-100;
+  background-color: var(--duo-blue);
+  border-bottom-color: var(--duo-blue-hover);
+}
+
+.duo-button-blue:hover {
+  background-color: var(--duo-blue-hover);
 }
