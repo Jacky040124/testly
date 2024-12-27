@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { User } from '../Classes/models/User';
+import { User } from '../classes/models/User';
 
 describe('User Class', () => {
     it('should create a User instance', () => {

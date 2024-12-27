@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Question } from '../Classes/models/Question';
+import { Question } from '../classes/models/Question';
 
 describe('Question Class', () => {
     it('should create a Question instance', () => {
