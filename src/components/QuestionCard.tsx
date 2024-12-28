@@ -53,18 +53,15 @@ export function QuestionCard() {
 
     if (lives === 0) {
         return (
-            <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center">
-                <div className="bg-white p-8 rounded-3xl text-center space-y-6 max-w-md mx-4">
-                    <h2 className="text-3xl font-bold text-[var(--duo-gray-400)]">Game Over!</h2>
-                    <p className="text-lg text-[var(--duo-gray-400)]">You've run out of lives! 💔</p>
-                    <button 
-                        onClick={() => window.location.reload()}
-                        className="duo-button w-full py-4 text-lg"
-                    >
-                        Try Again
-                    </button>
-                </div>
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center">
+            <div className="bg-white p-8 rounded-3xl text-center space-y-6 max-w-md mx-4">
+              <h2 className="text-3xl font-bold text-[var(--duo-gray-400)]">Game Over!</h2>
+              <p className="text-lg text-[var(--duo-gray-400)]">Bro is not getting his L (you are cooked) 💀</p>
+              <button onClick={() => window.location.reload()} className="duo-button w-full py-4 text-lg">
+                Try Again
+              </button>
             </div>
+          </div>
         );
     }
 
