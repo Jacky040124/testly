@@ -1,31 +1,36 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { useEnvironment } from "@/contexts/EnvironmentContext";
 
-interface ProgressGridProps {
-  currentQuestion: number;
-  answeredQuestions: Record<number, "correct" | "incorrect" | "current">;
-}
+export function ProgressGrid() {
+    const { answeredQuestions, index } = useEnvironment();
 
-export function ProgressGrid({ currentQuestion, answeredQuestions }: ProgressGridProps) {
-  const questions = Array.from({ length: 40 }, (_, i) => i + 1);
 
-  return (
-    <div className="grid grid-cols-8 gap-2">
-      {questions.map((num) => (
-        <div
-          key={num}
-          className={cn(
-            "h-9 w-full flex items-center justify-center rounded-lg font-medium text-sm",
-            answeredQuestions[num] === "correct" && "bg-[#E8F5E9] text-[#2E7D32]",
-            answeredQuestions[num] === "incorrect" && "bg-[#FFEBEE] text-[#C62828]",
-            answeredQuestions[num] === "current" && "border border-[#2196F3] text-[#2196F3]",
-            !answeredQuestions[num] && "bg-[#F5F5F5] text-[#9E9E9E]"
-          )}
-        >
-          {num}
+    return (
+        <div className="grid grid-cols-8 gap-2">
+            {Array.from({ length: 40 }, (_, i) => {
+                const questionNumber = i + 1;
+                const status = answeredQuestions[questionNumber];
+                
+                return (
+                    <div
+                        key={questionNumber}
+                        className={`
+                            h-10 flex items-center justify-center rounded-xl text-sm font-bold
+                            ${questionNumber === index ? 'border-2 border-[#1cb0f6] bg-white' : ''}
+                            ${status === "correct" 
+                                ? "bg-[#E5F6D3] text-[var(--duo-green)]" 
+                                : status === "incorrect"
+                                ? "bg-[var(--duo-incorrect)] text-white"
+                                : "bg-[#f0f0f0] text-[var(--duo-gray-400)]"}
+                            transition-all duration-200
+                        `}
+                    >
+                        {questionNumber}
+                    </div>
+                );
+            })}
         </div>
-      ))}
-    </div>
-  );
+    );
+>>>>>>> 0a0f32b (feat(ui): ui improvement and fixing bugs, first working phototype)
 }

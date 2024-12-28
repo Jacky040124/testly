@@ -23,6 +23,8 @@ export default function Home() {
     12: "current",
   } as const;
 
+  // TODO: Implement sign in feature
+  
   return (
     <div className="min-h-screen bg-[var(--duo-background)] p-6">
       <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr,1.5fr] gap-6">
