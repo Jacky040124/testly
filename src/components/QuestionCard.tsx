@@ -41,14 +41,13 @@ export function QuestionCard() {
             
             // Only deduct life if this question hasn't been answered incorrectly before
             if (!isCorrect && answeredQuestions[index] !== "incorrect") {
-                setLives(prevLives => Math.max(0, prevLives - 1));
+                const newLives = Math.max(0, lives - 1);
+                setLives(newLives);
             }
 
-            setAnsweredQuestions((prev: Record<number, QuestionStatus>) => {
-                const newState = { ...prev };
-                newState[index] = isCorrect ? "correct" : "incorrect";
-                return newState;
-            });
+            const newAnsweredQuestions = { ...answeredQuestions };
+            newAnsweredQuestions[index] = isCorrect ? "correct" : "incorrect";
+            setAnsweredQuestions(newAnsweredQuestions);
         }
     };
 
