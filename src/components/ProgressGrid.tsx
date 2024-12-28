@@ -3,29 +3,32 @@
 import { cn } from "@/lib/utils";
 
 interface ProgressGridProps {
-  currentQuestion: number;
-  answeredQuestions: Record<number, "correct" | "incorrect" | "current">;
+  index: number;
+  answeredQuestions: Record<number, "correct" | "incorrect" | "">;
 }
 
-export function ProgressGrid({ currentQuestion, answeredQuestions }: ProgressGridProps) {
-  const questions = Array.from({ length: 40 }, (_, i) => i + 1);
-
+export function ProgressGrid({ index, answeredQuestions }: ProgressGridProps) {
   return (
     <div className="grid grid-cols-8 gap-2">
-      {questions.map((num) => (
-        <div
-          key={num}
-          className={cn(
-            "h-9 w-full flex items-center justify-center rounded-lg font-medium text-sm",
-            answeredQuestions[num] === "correct" && "bg-[#E8F5E9] text-[#2E7D32]",
-            answeredQuestions[num] === "incorrect" && "bg-[#FFEBEE] text-[#C62828]",
-            answeredQuestions[num] === "current" && "border border-[#2196F3] text-[#2196F3]",
-            !answeredQuestions[num] && "bg-[#F5F5F5] text-[#9E9E9E]"
-          )}
-        >
-          {num}
-        </div>
-      ))}
+      {Object.entries(answeredQuestions).map(([questionNumber, status]) => {
+        const number = parseInt(questionNumber);
+        const isCurrent = number === index;
+        
+        return (
+          <div
+            key={questionNumber}
+            className={`
+              h-8 rounded-lg flex items-center justify-center text-sm font-medium
+              ${isCurrent ? 'ring-2 ring-blue-400 ring-offset-2' : ''}
+              ${status === 'correct' ? 'bg-[var(--duo-green)] text-white' : 
+                status === 'incorrect' ? 'bg-[var(--duo-red)] text-white' : 
+                'bg-[var(--duo-gray-200)] text-[var(--duo-gray-700)]'}
+            `}
+          >
+            {questionNumber}
+          </div>
+        );
+      })}
     </div>
   );
 }

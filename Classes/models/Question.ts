@@ -1,25 +1,25 @@
 export class Question {
 
     // constructor
-    questionId: string;
+    questionString: string;
     options: string[];
 
     constructor(questionId: string, options: string[]) {
-        this.questionId = questionId;
+        this.questionString = questionId;
         this.options = options;
     }
 
     // method
-    getQuestionId(): string {
-        return this.questionId;
+    getQuestionString(): string {
+        return this.questionString;
     }
 
     getOptions(): string[] {
         return this.options;
     }
 
-    setQuestionId(questionId: string): void {
-        this.questionId = questionId;
+    setQuestionString(questionString: string): void {
+        this.questionString = questionString;
     }
 
     
