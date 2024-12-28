@@ -1,34 +1,35 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { useEnvironment } from "@/contexts/EnvironmentContext";
 
-interface ProgressGridProps {
-  index: number;
-  answeredQuestions: Record<number, "correct" | "incorrect" | "">;
-}
+export function ProgressGrid() {
+    const { answeredQuestions, index } = useEnvironment();
 
-export function ProgressGrid({ index, answeredQuestions }: ProgressGridProps) {
-  return (
-    <div className="grid grid-cols-8 gap-2">
-      {Object.entries(answeredQuestions).map(([questionNumber, status]) => {
-        const number = parseInt(questionNumber);
-        const isCurrent = number === index;
-        
-        return (
-          <div
-            key={questionNumber}
-            className={`
-              h-8 rounded-lg flex items-center justify-center text-sm font-medium
-              ${isCurrent ? 'ring-2 ring-blue-400 ring-offset-2' : ''}
-              ${status === 'correct' ? 'bg-[var(--duo-green)] text-white' : 
-                status === 'incorrect' ? 'bg-[var(--duo-red)] text-white' : 
-                'bg-[var(--duo-gray-200)] text-[var(--duo-gray-700)]'}
-            `}
-          >
-            {questionNumber}
-          </div>
-        );
-      })}
-    </div>
-  );
+
+    return (
+        <div className="grid grid-cols-8 gap-2">
+            {Array.from({ length: 40 }, (_, i) => {
+                const questionNumber = i + 1;
+                const status = answeredQuestions[questionNumber];
+                
+                return (
+                    <div
+                        key={questionNumber}
+                        className={`
+                            h-10 flex items-center justify-center rounded-xl text-sm font-bold
+                            ${questionNumber === index ? 'border-2 border-[#1cb0f6] bg-white' : ''}
+                            ${status === "correct" 
+                                ? "bg-[#E5F6D3] text-[var(--duo-green)]" 
+                                : status === "incorrect"
+                                ? "bg-[var(--duo-incorrect)] text-white"
+                                : "bg-[#f0f0f0] text-[var(--duo-gray-400)]"}
+                            transition-all duration-200
+                        `}
+                    >
+                        {questionNumber}
+                    </div>
+                );
+            })}
+        </div>
+    );
 }

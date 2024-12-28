@@ -9,8 +9,10 @@ import { useEnvironment } from "@/contexts/EnvironmentContext";
 import { useState } from "react";
 
 export function ProgressSection() {
-  const { index, setIndex, answeredQuestions } = useEnvironment();
+  const { index, setIndex, answeredQuestions, completionPercentage } = useEnvironment();
   const [showPopup, setShowPopup] = useState(false);
+
+
 
   const handleFeatureClick = () => {
     setShowPopup(true);
@@ -27,10 +29,6 @@ export function ProgressSection() {
     setIndex(prevIndex < 1 ? 40 : prevIndex);
   };
 
-  // Calculate completion percentage
-  const totalQuestions = Object.keys(answeredQuestions).length;
-  const correctAnswers = Object.values(answeredQuestions).filter(status => status === "correct").length;
-  const completionPercentage = Math.round((correctAnswers / totalQuestions) * 100);
 
   return (
     <div className="space-y-5 relative">
@@ -43,8 +41,8 @@ export function ProgressSection() {
             {completionPercentage}% Complete
           </div>
         </div>
-        <ProgressGrid index={index} answeredQuestions={answeredQuestions} />
-        
+        <ProgressGrid />
+
         {/* Navigation Buttons */}
         <div className="flex justify-between gap-4 pt-4">
           <button
@@ -64,14 +62,14 @@ export function ProgressSection() {
 
       {/* Resource Buttons */}
       <div className="flex gap-4">
-        <Button 
+        <Button
           className="duo-button-white flex-1 justify-center text-base hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 rounded-xl"
           onClick={handleFeatureClick}
         >
           <BookOpen className="w-5 h-5 mr-2" />
           Challenge Bank™
         </Button>
-        <Button 
+        <Button
           className="duo-button-white flex-1 justify-center text-base hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 rounded-xl"
           onClick={handleFeatureClick}
         >

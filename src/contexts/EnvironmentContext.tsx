@@ -14,12 +14,16 @@ type EnvironmentContextType = {
   setResult: (result: string) => void;
   answeredQuestions: Record<number, QuestionStatus>;
   setAnsweredQuestions: (answeredQuestions: Record<number, QuestionStatus>) => void;
+  completionPercentage: number;
+  lives: number;
+  setLives: (lives: number) => void;
 };
 
 export const EnvironmentContext = createContext<EnvironmentContextType | null>(null);
 
 export function EnvironmentProvider({ children }: { children: React.ReactNode }) {
   const [index, setIndex] = useState(1);
+  const [lives, setLives] = useState(10);
   const [answeredQuestions, setAnsweredQuestions] = useState<Record<number, QuestionStatus>>(() => {
     const initial: Record<number, QuestionStatus> = {};
     for (let i = 1; i <= 40; i++) {
@@ -37,7 +41,17 @@ export function EnvironmentProvider({ children }: { children: React.ReactNode })
     ]
   });
   const [result, setResult] = useState("");
+  const [completionPercentage, setCompletionPercentage] = useState(0);
 
+  // Update completion percentage whenever answeredQuestions changes
+  useEffect(() => {
+    const answeredCount = Object.values(answeredQuestions).filter(status => status !== "").length;
+    const newPercentage = Math.round((answeredCount / 40) * 100);
+    console.log("Updating completion percentage:", newPercentage);
+    setCompletionPercentage(newPercentage);
+  }, [answeredQuestions]);
+
+  // Fetch question when index changes
   useEffect(() => {
     async function getQuestion() {
       const question = await fetchQuestion(index);
@@ -46,7 +60,18 @@ export function EnvironmentProvider({ children }: { children: React.ReactNode })
     getQuestion();
   }, [index]);
 
-  const value = { index, setIndex, question, result, setResult, answeredQuestions, setAnsweredQuestions };
+  const value = {
+    index,
+    setIndex,
+    question,
+    result,
+    setResult,
+    answeredQuestions,
+    setAnsweredQuestions,
+    completionPercentage,
+    lives,
+    setLives,
+  };
 
   return <EnvironmentContext.Provider value={value}>{children}</EnvironmentContext.Provider>;
 }

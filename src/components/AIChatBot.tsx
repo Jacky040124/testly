@@ -12,8 +12,10 @@ export function AIChatBot() {
 
     const handleChat = async (prompt: string) => {
         setIsLoading(true);
-        const content = `${prompt} for this question: "${question.text}" with options: ${question.options.join(", ")}`;
+        const content = `${prompt} for this question: "${question.text}" with options: ${question.options.map(opt => opt.text).join(", ")}`;
+        console.log("Sending to OpenAI:", content);
         const result = await chat(content);
+        console.log("Received from OpenAI:", result);
         setChatResult(result);
         setResult(result);
         setIsLoading(false);
