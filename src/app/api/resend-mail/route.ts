@@ -29,8 +29,16 @@ class Mail {
 
 export async function POST(request:Request) {
   try {
-    const {from, to} = await request.json();
-    const mail = new Mail(from, to, "Hello World", "<p>Congrats on sending your <strong>first email</strong>!</p>");
+    const {from, to, subject, content} = await request.json();
+    const formattedContent = `
+      <h2>User Feedback Received</h2>
+      <div style="margin: 20px 0;">
+        <p>${content}</p>
+      </div>
+      <hr>
+      <p style="color: #666; font-size: 12px;">This is an automated message from your feedback system.</p>
+    `;
+    const mail = new Mail(from, to, subject, formattedContent);
 
     await mail.send();
     return NextResponse.json({ message: "Success", data: mail }, { status: 200 });

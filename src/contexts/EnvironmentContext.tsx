@@ -28,8 +28,13 @@ export function EnvironmentProvider({ children }: { children: React.ReactNode })
     return initial;
   });
   const [question, setQuestion] = useState<Question>({
-    text: "what's the meaning of life",
-    options: ["money", "win a hackathon", "undefined", "it depends"],
+    text: "What is the maximum speed limit in a residential area?",
+    options: [
+      { text: "30 km/h", isCorrect: false },
+      { text: "50 km/h", isCorrect: true },
+      { text: "70 km/h", isCorrect: false },
+      { text: "90 km/h", isCorrect: false }
+    ]
   });
   const [result, setResult] = useState("");
 

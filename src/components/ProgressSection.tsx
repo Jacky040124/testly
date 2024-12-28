@@ -9,20 +9,28 @@ import { useEnvironment } from "@/contexts/EnvironmentContext";
 import { useState } from "react";
 
 export function ProgressSection() {
-    // TODO: Develop challenge bank
-    // TODO: Develop Handbook
-  const { index, answeredQuestions } = useEnvironment();
+  const { index, setIndex, answeredQuestions } = useEnvironment();
   const [showPopup, setShowPopup] = useState(false);
-
-  // Calculate completion percentage
-  const totalQuestions = Object.keys(answeredQuestions).length;
-  const correctAnswers = Object.values(answeredQuestions).filter(status => status === "correct").length;
-  const completionPercentage = Math.round((correctAnswers / totalQuestions) * 100);
 
   const handleFeatureClick = () => {
     setShowPopup(true);
     setTimeout(() => setShowPopup(false), 2000);
   };
+
+  const handleNext = () => {
+    const nextIndex = index + 1;
+    setIndex(nextIndex > 40 ? 1 : nextIndex);
+  };
+
+  const handlePrev = () => {
+    const prevIndex = index - 1;
+    setIndex(prevIndex < 1 ? 40 : prevIndex);
+  };
+
+  // Calculate completion percentage
+  const totalQuestions = Object.keys(answeredQuestions).length;
+  const correctAnswers = Object.values(answeredQuestions).filter(status => status === "correct").length;
+  const completionPercentage = Math.round((correctAnswers / totalQuestions) * 100);
 
   return (
     <div className="space-y-5 relative">
@@ -36,6 +44,22 @@ export function ProgressSection() {
           </div>
         </div>
         <ProgressGrid index={index} answeredQuestions={answeredQuestions} />
+        
+        {/* Navigation Buttons */}
+        <div className="flex justify-between gap-4 pt-4">
+          <button
+            className="duo-button flex-1 hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 rounded-xl"
+            onClick={handlePrev}
+          >
+            Previous
+          </button>
+          <button
+            className="duo-button flex-1 hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 rounded-xl"
+            onClick={handleNext}
+          >
+            Next
+          </button>
+        </div>
       </Card>
 
       {/* Resource Buttons */}

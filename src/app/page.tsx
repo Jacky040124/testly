@@ -4,14 +4,7 @@ import { ProgressSection } from "@/components/ProgressSection";
 import { AIChatBot } from "@/components/AIChatBot";
 
 export default function Home() {
-  
-
-  const options = [
-    "Lane changing is allowed.",
-    "You must stop for pedestrians.",
-    "Don't stop or slow down.",
-    "Pedestrians are not allowed at the cross lines.",
-  ];
+  // TODO: Implement sign in feature
   
   return (
     <div className="min-h-screen bg-[var(--duo-background)] p-6 font-['DIN Round Pro']">
