@@ -2,6 +2,7 @@
 
 import { useEnvironment } from "@/contexts/EnvironmentContext";
 import { useEffect, useState } from "react";
+import Link from 'next/link';
 
 export function TopBar() {
     const { completionPercentage, lives } = useEnvironment();
@@ -59,6 +60,9 @@ export function TopBar() {
                     {lives}
                 </span>
             </div>
+
+            <Link href="/api/auth/login">Login</Link>
+            <Link href="/api/auth/logout">Logout</Link>
         </div>
     );
 } 

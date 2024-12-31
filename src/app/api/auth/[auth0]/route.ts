@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export const GET = async (request: Request) => {
   try {
-    // 调用 Auth0 的处理函数
+    console.log("Authentication request received");
     return handleAuth()(request);
   } catch (error) {
     console.error("Authentication error:", error);
