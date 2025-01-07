@@ -5,8 +5,6 @@ import { Label } from "@/components/ui/label";
 import { useEnvironment } from "@/contexts/EnvironmentContext";
 import { useState, useEffect } from "react";
 
-type QuestionStatus = "correct" | "incorrect" | "";
-
 export function QuestionCard() {
     const questionImageUrl = null;
     const { question, index, setAnsweredQuestions, answeredQuestions, lives, setLives } = useEnvironment();

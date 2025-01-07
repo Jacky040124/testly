@@ -54,24 +54,8 @@ export function EnvironmentProvider({ children }: { children: React.ReactNode })
   // Fetch question when index changes
   useEffect(() => {
     async function getQuestion() {
-      console.log("Fetching question for index:", index);
-      try {
-        const newQuestion = await fetchQuestion(index);
-        console.log("Received new question:", newQuestion);
-        setQuestion(newQuestion);
-      } catch (error) {
-        console.error("Error fetching question:", error);
-        // Fallback to a default question on error
-        setQuestion({
-          text: "What is the maximum speed limit in a residential area?",
-          options: [
-            { text: "30 km/h", isCorrect: false },
-            { text: "50 km/h", isCorrect: true },
-            { text: "70 km/h", isCorrect: false },
-            { text: "90 km/h", isCorrect: false }
-          ]
-        });
-      }
+      const question = await fetchQuestion(index);
+      setQuestion(question);
     }
     getQuestion();
   }, [index]);
