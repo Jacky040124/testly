@@ -1,15 +1,15 @@
-export async function sendMail(to: string, subject: string, html: string) {
+export async function sendMail(text: string, from: string, to: string) {
   try {
-    const response = await fetch("/api/send-email", {
+    const response = await fetch("/api/resend-mail", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ to, subject, html }),
+      body: JSON.stringify({ text, from, to }),
     });
 
     const data = await response.json();
-    return data;
+    console.log("mail data:", data);
+
   } catch (error) {
-    console.error("Email sending error:", error);
-    throw error;
+    console.log("sendMail error:", error);
   }
 }

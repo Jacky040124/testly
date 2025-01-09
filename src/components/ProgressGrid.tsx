@@ -32,5 +32,4 @@ export function ProgressGrid() {
             })}
         </div>
     );
->>>>>>> 0a0f32b (feat(ui): ui improvement and fixing bugs, first working phototype)
 }

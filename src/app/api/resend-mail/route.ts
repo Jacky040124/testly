@@ -18,12 +18,26 @@ class Mail {
     }
 
     public async send() {
+<<<<<<< HEAD
         resend.emails.send({
         from: this.from,
         to: this.to,
         subject: this.subject,
         html: this.html,
         });
+=======
+        try {
+            await resend.emails.send({
+                from: this.from,
+                to: this.to,
+                subject: this.subject,
+                html: this.html,
+            });
+        } catch (error) {
+            console.error("Error sending email:", error);
+            throw new Error("Failed to send email");
+        }
+>>>>>>> origin/errorHandling
     }
 }
 
@@ -44,11 +58,16 @@ export async function POST(request:Request) {
     return NextResponse.json({ message: "Success", data: mail }, { status: 200 });
 
   } catch (error) {
+<<<<<<< HEAD
 
     // TODO: implement centralise logging and error handling
     console.error("Resend API error:", error);
     return NextResponse.json({ error: "Failed to send email" }, { status: 400 });
 
+=======
+    console.error("Resend API error:", error);
+    return NextResponse.json({ error: (error as Error).message || "Failed to send email" }, { status: 400 });
+>>>>>>> origin/errorHandling
   }
 }
 
