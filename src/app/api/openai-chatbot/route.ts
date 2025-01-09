@@ -2,10 +2,7 @@
 
 import OpenAI from "openai";
 import { NextResponse } from "next/server"
-<<<<<<< HEAD
-=======
 import { Resend } from "resend";
->>>>>>> origin/errorHandling
 
 // Check if API key exists
 const apiKey = process.env.OPENAI_API_KEY;
@@ -17,9 +14,6 @@ const openai = new OpenAI({
   apiKey: apiKey
 });
 
-<<<<<<< HEAD
-async function chat(content:string) {
-=======
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 class Mail {
@@ -54,7 +48,6 @@ class Mail {
 
 async function chat(content:string) {
     console.log("Chat request content:", content);
->>>>>>> origin/errorHandling
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [{ role: "user", content: content }],
@@ -68,10 +61,7 @@ export async function POST(request:Request) {
 
     try {
         const result = await chat(content);
-<<<<<<< HEAD
-=======
         console.log("Chat response:", result);
->>>>>>> origin/errorHandling
         return NextResponse.json({ message: "Success", result: result.content }, { status: 200 });
     } catch (error) {
         console.error("OPENAI API error:", error);
@@ -79,8 +69,6 @@ export async function POST(request:Request) {
     }
 }
 
-<<<<<<< HEAD
-=======
 export async function sendMail(text: string, from: string, to: string) {
   try {
     console.log("Sending mail from:", from, "to:", to);
@@ -97,6 +85,5 @@ export async function sendMail(text: string, from: string, to: string) {
   }
 }
 
->>>>>>> origin/errorHandling
 
 
