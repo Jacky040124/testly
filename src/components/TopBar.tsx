@@ -2,7 +2,7 @@
 
 import { useEnvironment } from "@/contexts/EnvironmentContext";
 import { useEffect, useState } from "react";
-import Link from 'next/link';
+import Link from "next/link";
 
 export function TopBar() {
     const { completionPercentage, lives } = useEnvironment();
@@ -16,6 +16,7 @@ export function TopBar() {
             return () => clearTimeout(timer);
         }
     }, [lives]);
+
 
     return (
         <div className="flex items-center gap-6 mb-8">
@@ -45,7 +46,7 @@ export function TopBar() {
             </div>
 
             {/* Heart Counter */}
-            <div 
+            <div
                 className={`
                     flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300
                     ${lives <= 3 ? 'bg-red-100' : 'bg-[#FFF5F5]'}
@@ -61,8 +62,9 @@ export function TopBar() {
                 </span>
             </div>
 
-            <Link href="/api/auth/login">Login</Link>
-            <Link href="/api/auth/logout">Logout</Link>
+            <Link href="/signin"> Sign in</Link>
+            <Link href="signup"> Sign up</Link>
+
         </div>
     );
 } 

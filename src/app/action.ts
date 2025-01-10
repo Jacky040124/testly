@@ -3,10 +3,10 @@
 import { neon } from "@neondatabase/serverless";
 import { Question } from "@/types/Question";
 
-export async function fetchQuestion(index: number): Promise<Question> {
-  const url = process.env.DATABASE_URL as string;
-  const sql = neon(url);
+const url = process.env.DATABASE_URL as string;
+const sql = neon(url);
 
+export async function fetchQuestion(index: number): Promise<Question> {
   const data = await sql`SELECT text, options FROM question_bank WHERE question_id = ${index}`;
 
   const question = data[0];
@@ -34,4 +34,20 @@ export async function fetchQuestion(index: number): Promise<Question> {
       isCorrect: opt.correct,
     })),
   };
+}
+
+
+type signInData = {
+    email: string;
+    password: string;
+}
+
+export async function signIn(data : signInData) {
+    const data = await sql`SELECT text, options FROM question_bank WHERE question_id = ${index}`;
+    
+    // validate user exist
+    // validate user password correct
+    // context switched to sign in
+    // load user context
+    
 }
