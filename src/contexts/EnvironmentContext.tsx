@@ -1,101 +1,74 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { fetchQuestion } from "@/app/action";
-import { Question } from "@/types/Question";
-
-type QuestionStatus = "correct" | "incorrect" | "";
+import { fetchQuestionSet } from "@/app/action";
+import { QuestionSet } from "@/types/QuestionSet";
+import { ClientUser } from "@/types/User";
 
 type EnvironmentContextType = {
-  index: number;
-  setIndex: (index: number) => void;
-  question: Question;
-  result: string;
-  setResult: (result: string) => void;
-  answeredQuestions: Record<number, QuestionStatus>;
-  setAnsweredQuestions: (answeredQuestions: Record<number, QuestionStatus>) => void;
-  completionPercentage: number;
-  lives: number;
-  setLives: (lives: number) => void;
+    user: ClientUser | null;
+    setUser: (user: ClientUser | null) => void;
+    questionSet: QuestionSet | null;
+    setQuestionSet: (questionSet: QuestionSet | null) => void;
+    index: number;
+    setIndex: (index: number) => void;
+    lives: number;
+    setLives: (lives: number) => void;
 };
 
+// TODO: lives should be part of the thing too
 export const EnvironmentContext = createContext<EnvironmentContextType | null>(null);
 
 export function EnvironmentProvider({ children }: { children: React.ReactNode }) {
-  const [index, setIndex] = useState(1);
-  const [lives, setLives] = useState(10);
-  const [answeredQuestions, setAnsweredQuestions] = useState<Record<number, QuestionStatus>>(() => {
-    const initial: Record<number, QuestionStatus> = {};
-    for (let i = 1; i <= 40; i++) {
-      initial[i] = "";
-    }
-    return initial;
-  });
-  const [question, setQuestion] = useState<Question>({
-    text: "What is the maximum speed limit in a residential area?",
-    options: [
-      { text: "30 km/h", isCorrect: false },
-      { text: "50 km/h", isCorrect: true },
-      { text: "70 km/h", isCorrect: false },
-      { text: "90 km/h", isCorrect: false }
-    ]
-  });
-  const [result, setResult] = useState("");
-  const [completionPercentage, setCompletionPercentage] = useState(0);
+    // TODO : modify later
+    let id = 1;
+    const [user, setUser] = useState<ClientUser | null>(null);
+    const [questionSet, setQuestionSet] = useState<QuestionSet | null>(null);
+    const [index, setIndex] = useState(1);
+    const [lives, setLives] = useState(10);
 
-  // Update completion percentage whenever answeredQuestions changes
-  useEffect(() => {
-    const answeredCount = Object.values(answeredQuestions).filter(status => status !== "").length;
-    const newPercentage = Math.round((answeredCount / 40) * 100);
-    console.log("Updating completion percentage:", newPercentage);
-    setCompletionPercentage(newPercentage);
-  }, [answeredQuestions]);
+    // Fetch question when index changes
+    useEffect(() => {
+        async function getQuestionSet() {
+            if (user) {
+                console.log(fetchQuestionSet(user.id, id));
+            }
 
-  // Fetch question when index changes
-  useEffect(() => {
-    async function getQuestion() {
-      console.log("Fetching question for index:", index);
-      try {
-        const newQuestion = await fetchQuestion(index);
-        console.log("Received new question:", newQuestion);
-        setQuestion(newQuestion);
-      } catch (error) {
-        console.error("Error fetching question:", error);
-        // Fallback to a default question on error
-        setQuestion({
-          text: "What is the maximum speed limit in a residential area?",
-          options: [
-            { text: "30 km/h", isCorrect: false },
-            { text: "50 km/h", isCorrect: true },
-            { text: "70 km/h", isCorrect: false },
-            { text: "90 km/h", isCorrect: false }
-          ]
-        });
-      }
-    }
-    getQuestion();
-  }, [index]);
+            //   let newQuestionSet: QuestionSet;
+            //   console.log("Fetching question for id:", id);
+            //   try {
+            //     if (user) {
+            //         newQuestionSet = await fetchQuestionSet(user.userId,id);
+            //     } else {
+            //         newQuestionSet = await fetchQuestionSet(null,id);
+            //     }
+            //     setQuestionSet(newQuestionSet);
+            //   } catch (error) {
+            //     console.error("Error fetching question:", error);
+            //   }
+        }
+        console.log(user)
+        getQuestionSet();
+    }, [user]);
 
-  const value = {
-    index,
-    setIndex,
-    question,
-    result,
-    setResult,
-    answeredQuestions,
-    setAnsweredQuestions,
-    completionPercentage,
-    lives,
-    setLives,
-  };
+    const value = {
+        user,
+        setUser,
+        questionSet,
+        setQuestionSet,
+        index,
+        setIndex,
+        lives,
+        setLives,
+    };
 
-  return <EnvironmentContext.Provider value={value}>{children}</EnvironmentContext.Provider>;
+    return <EnvironmentContext.Provider value={value}>{children}</EnvironmentContext.Provider>;
 }
 
 export const useEnvironment = () => {
-  const context = useContext(EnvironmentContext);
-  if (!context) {
-    throw new Error("useEnvironment must be used within an EnvironmentProvider");
-  }
-  return context;
+    const context = useContext(EnvironmentContext);
+    if (!context) {
+        throw new Error("useEnvironment must be used within an EnvironmentProvider");
+    }
+    return context;
 };

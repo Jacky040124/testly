@@ -1,53 +1,76 @@
 "use server";
 
 import { neon } from "@neondatabase/serverless";
-import { Question } from "@/types/Question";
-
+import { User, ClientUser } from "@/types/User";
+import { randomUUID } from "crypto";
+import bcrypt from "bcrypt";
 const url = process.env.DATABASE_URL as string;
 const sql = neon(url);
 
-export async function fetchQuestion(index: number): Promise<Question> {
-  const data = await sql`SELECT text, options FROM question_bank WHERE question_id = ${index}`;
-
-  const question = data[0];
-  let parsedOptions;
-  try {
-    // Handle both string and object cases
-    parsedOptions = typeof question.options === "string" ? JSON.parse(question.options) : question.options;
-  } catch (error) {
-    console.error("Error parsing options:", error);
-    return {
-      text: question.text,
-      options: [
-        { text: "30 km/h", isCorrect: false },
-        { text: "50 km/h", isCorrect: true },
-        { text: "70 km/h", isCorrect: false },
-        { text: "90 km/h", isCorrect: false },
-      ],
-    };
-  }
-
-  return {
-    text: question.text,
-    options: parsedOptions.map((opt: { text: string; correct: boolean }) => ({
-      text: opt.text,
-      isCorrect: opt.correct,
-    })),
-  };
+export async function fetchQuestionSet(userId: string | null, question_set_id: number){
+  // update to fetch from attempted qset, if not attempted add to attemped
+  const questionSet = await sql`SELECT id,questions FROM question_sets WHERE id = ${question_set_id}`;
+  console.log(questionSet);
+  return questionSet;
 }
 
-
-type signInData = {
+type authData = {
     email: string;
     password: string;
 }
 
-export async function signIn(data : signInData) {
-    const data = await sql`SELECT text, options FROM question_bank WHERE question_id = ${index}`;
+
+async function hashPassword(password: string) {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
+}
+
+async function verifyPassword(password: string, hashedPassword:string) {
+    const isMatch = await bcrypt.compare(password, hashedPassword);
+    return isMatch;
+}
+
+export async function signIn(data : authData) : Promise<null | ClientUser>{
+    console.log("received Sign in data:",data);
+    const rawData = await sql`SELECT * FROM users WHERE email = ${data.email}`;
+    const user = rawData[0];
     
-    // validate user exist
-    // validate user password correct
-    // context switched to sign in
-    // load user context
+    if (user == null) {
+        console.log("user doesn't exist");
+        return null;
+    }
+
+    if (! await verifyPassword(data.password,user.passwordhash)) {
+        console.log("wrong password");
+        return null;
+    }
+
+    console.log(user);
+    const newUser: ClientUser = {
+        id: user.id,
+        email: user.email,
+        membership: user.membership,
+        attemptedQuestionSets: user.attemptedQuestionSets,
+        preferences: user.preferences,
+    }
+
+    return newUser;    
+}
+
+export async function signUp(data : authData) : Promise<Boolean>{
+    // insertion
+    await sql`INSERT INTO users(id, email, passwordhash, membership) 
+              VALUES (${crypto.randomUUID()},${data.email},${await hashPassword(data.password)},false)`;
+
+    // verificaiton
+    const rawData = await sql`SELECT * FROM users WHERE email = ${data.email}`;
+    const user = rawData[0];
     
+    if (user == null) {
+        console.log("fail to create");
+        return false;
+    }
+
+    return true;    
 }

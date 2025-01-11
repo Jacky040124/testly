@@ -1,3 +1,4 @@
+
 import { TopBar } from "@/components/TopBar";
 import { QuestionCard } from "@/components/QuestionCard";
 import { ProgressSection } from "@/components/ProgressSection";
@@ -13,11 +14,11 @@ export default function Home() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr,1.5fr] gap-8">
           {/* Left Column */}
-          <ProgressSection />
+          {/* <ProgressSection /> */}
 
           {/* Right Column */}
           <div className="space-y-8">
-            <QuestionCard />
+            {/* <QuestionCard /> */}
             <AIChatBot />
           </div>
         </div>
