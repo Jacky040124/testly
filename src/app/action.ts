@@ -1,17 +1,20 @@
 "use server";
 
 import { neon } from "@neondatabase/serverless";
-import { User, ClientUser } from "@/types/User";
-import { randomUUID } from "crypto";
+import { ClientUser } from "@/types/User";
 import bcrypt from "bcrypt";
 const url = process.env.DATABASE_URL as string;
 const sql = neon(url);
 
 export async function fetchQuestionSet(userId: string | null, question_set_id: number){
   // update to fetch from attempted qset, if not attempted add to attemped
-  const questionSet = await sql`SELECT id,questions FROM question_sets WHERE id = ${question_set_id}`;
-  console.log(questionSet);
-  return questionSet;
+  try {
+    const questionSet = await sql`SELECT id,questions FROM question_sets WHERE id = ${question_set_id}`;
+    console.log("fetch question set sucess");
+    return questionSet;
+  } catch (e : any) {
+    console.log(e,"error fetch question set error",e)
+  }
 }
 
 type authData = {

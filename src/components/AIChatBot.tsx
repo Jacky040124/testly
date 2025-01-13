@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { chat } from "@/service/chat.service"
-import { useEnvironment } from "@/contexts/EnvironmentContext";
+import { useGlobal } from "@/contexts/GlobalContext";
 import { useState } from "react";
 
 export function AIChatBot() {
-    const {question, setResult} = useEnvironment();
+    const {question, setResult} = useGlobal();
     const [isLoading, setIsLoading] = useState(false);
     const [chatResult, setChatResult] = useState("");
 

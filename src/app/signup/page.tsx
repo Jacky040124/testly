@@ -1,8 +1,6 @@
 "use client"
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useEnvironment } from "@/contexts/EnvironmentContext";
 import { signUp } from "@/app/action";
-import { QuestionSet } from "../../../Classes/models/QuestionSet";
 
 type signInData = {
     email: string;

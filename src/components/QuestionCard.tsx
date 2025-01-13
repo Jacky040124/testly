@@ -2,66 +2,56 @@
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { useEnvironment } from "@/contexts/EnvironmentContext";
+import { useGlobal } from "@/contexts/GlobalContext";
 import { useState, useEffect } from "react";
-
-type QuestionStatus = "correct" | "incorrect" | "";
+import { Question } from "@/types/Question";
 
 export function QuestionCard() {
     const questionImageUrl = null;
-    const { question, index, setAnsweredQuestions, answeredQuestions, lives, setLives } = useEnvironment();
-    const [selectedValue, setSelectedValue] = useState<string>("");
-    
-    // Update selectedValue when index changes based on existing answer
+    const { index, questionSet, lives, setLives } = useGlobal();
+    const [selectedValue, setSelectedValue] = useState<string>("")
+    const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+
+    // update currentQuestion
     useEffect(() => {
-        if (answeredQuestions[index]) {
-            // If question is already answered, find the corresponding option
-            const status = answeredQuestions[index];
-            const matchingOption = question?.options?.find(opt => 
-                (status === "correct" && opt.isCorrect) || 
-                (status === "incorrect" && !opt.isCorrect)
-            );
-            setSelectedValue(matchingOption?.text || "");
-        } else {
-            // If question is not answered, reset selection
-            setSelectedValue("");
+        console.log("QuestionSet:", questionSet);
+        console.log("Index:", index);
+        if (questionSet?.questions) {
+            console.log("Setting current question:", questionSet.questions[index]);
+            setCurrentQuestion(questionSet.questions[index]);
         }
-    }, [index, question, answeredQuestions]);
-    
-    if (!question?.options) {
-        return null;
+    }, [index, questionSet])
+
+
+    const handleSelect = (value: string) => {
+        setSelectedValue(value);
+
+        if (currentQuestion) {
+            const selectedOption = currentQuestion.options.find(opt => opt.text === value);
+            if (selectedOption) {
+                const isCorrect = selectedOption.isCorrect;
+
+                // Only deduct life if this question hasn't been answered incorrectly before
+                if (!isCorrect && currentQuestion.answer == null) {
+                    const newLives = Math.max(0, lives - 1);
+                    setLives(newLives);
+                }
+            }
+        }
     }
 
-    const handleValueChange = (value: string) => {
-        setSelectedValue(value);
-        
-        const selectedOption = question.options.find(opt => opt.text === value);
-        if (selectedOption) {
-            const isCorrect = selectedOption.isCorrect;
-            
-            // Only deduct life if this question hasn't been answered incorrectly before
-            if (!isCorrect && answeredQuestions[index] !== "incorrect") {
-                const newLives = Math.max(0, lives - 1);
-                setLives(newLives);
-            }
-
-            const newAnsweredQuestions = { ...answeredQuestions };
-            newAnsweredQuestions[index] = isCorrect ? "correct" : "incorrect";
-            setAnsweredQuestions(newAnsweredQuestions);
-        }
-    };
 
     if (lives === 0) {
         return (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center">
-            <div className="bg-white p-8 rounded-3xl text-center space-y-6 max-w-md mx-4">
-              <h2 className="text-3xl font-bold text-[var(--duo-gray-400)]">Game Over!</h2>
-              <p className="text-lg text-[var(--duo-gray-400)]">Bro is not getting his L (you are cooked) 💀</p>
-              <button onClick={() => window.location.reload()} className="duo-button w-full py-4 text-lg">
-                Try Again
-              </button>
+            <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center">
+                <div className="bg-white p-8 rounded-3xl text-center space-y-6 max-w-md mx-4">
+                    <h2 className="text-3xl font-bold text-[var(--duo-gray-400)]">Game Over!</h2>
+                    <p className="text-lg text-[var(--duo-gray-400)]">Bro is not getting his L (you are cooked) 💀</p>
+                    <button onClick={() => window.location.reload()} className="duo-button w-full py-4 text-lg">
+                        Try Again
+                    </button>
+                </div>
             </div>
-          </div>
         );
     }
 
@@ -87,7 +77,7 @@ export function QuestionCard() {
                 <div className="space-y-2">
                     <div className="flex items-center gap-3">
                         <h1 className="text-3xl font-bold text-[var(--duo-gray-400)] line-clamp-2">
-                            {question.text}
+                            {currentQuestion && currentQuestion.text}
                         </h1>
                         <span className="px-3 py-1 rounded-full text-sm font-medium bg-[#E5F6D3] text-[var(--duo-green)] shrink-0">
                             Medium
@@ -104,66 +94,74 @@ export function QuestionCard() {
 
             {/* Options Section - Scrollable if needed */}
             <div className="flex-1 overflow-y-auto px-8 pb-8">
-                <RadioGroup 
-                    className="space-y-4"
-                    value={selectedValue}
-                    onValueChange={handleValueChange}
-                >
-                    {question.options.map((optionItem, optionIndex) => {
-                        const isSelected = selectedValue === optionItem.text;
-                        const isDisabled = selectedValue !== "" && !isSelected;
-                        const isIncorrect = isSelected && answeredQuestions[index] === "incorrect";
-                        
-                        return (
-                            <Label 
-                                key={`${optionIndex}-${optionItem.text}`}
-                                htmlFor={`option-${optionIndex}`}
-                                className={`
-                                    group flex items-center space-x-3 bg-white p-5 rounded-2xl border-2 
-                                    ${isSelected && !isIncorrect
-                                        ? 'border-[var(--duo-green)] bg-[#F7FFF4] translate-y-[2px] shadow-[0_0px_0_0_#58CC02]' 
-                                        : isSelected && isIncorrect
-                                        ? 'border-red-500 bg-red-50 translate-y-[2px] shadow-[0_0px_0_0_#ff0000]'
-                                        : 'border-[var(--duo-gray-200)]'
-                                    }
-                                    ${!isDisabled && !isSelected 
-                                        ? 'hover:border-[var(--duo-green)] hover:bg-[#F7FFF4] hover:-translate-y-[2px] hover:shadow-[0_4px_0_0_#58CC02,0_6px_8px_rgba(0,0,0,0.1)]' 
-                                        : ''
-                                    }
-                                    ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-                                    transition-all duration-75
-                                    ${!isDisabled ? 'active:translate-y-[2px] active:shadow-[0_0px_0_0_#58CC02]' : ''}
-                                `}
-                            >
-                                <RadioGroupItem 
-                                    value={optionItem.text} 
-                                    id={`option-${optionIndex}`}
-                                    disabled={isDisabled}
+                {currentQuestion && currentQuestion.options ? (
+                    <RadioGroup
+                        className="space-y-4"
+                        value={selectedValue}
+                        onValueChange={handleSelect}
+                    >
+                        {currentQuestion.options.map((optionItem, optionIndex) => {
+                            console.log("optionItem:", optionItem);
+                            console.log("optionIndex:", optionIndex);
+                            const isSelected = selectedValue === optionItem.text;
+                            const isDisabled = selectedValue !== "" && !isSelected;
+                            const isIncorrect = isSelected && optionItem.isCorrect;
+
+                            return (
+                                <Label
+                                    key={`${optionIndex}-${optionItem.text}`}
+                                    htmlFor={`option-${optionIndex}`}
                                     className={`
-                                        w-5 h-5 border-2 
+                                        group flex items-center space-x-3 bg-white p-5 rounded-2xl border-2 
                                         ${isSelected && !isIncorrect
-                                            ? 'text-[var(--duo-green)] border-[var(--duo-green)]'
+                                            ? 'border-[var(--duo-green)] bg-[#F7FFF4] translate-y-[2px] shadow-[0_0px_0_0_#58CC02]'
                                             : isSelected && isIncorrect
-                                            ? 'text-red-500 border-red-500'
-                                            : 'text-[var(--duo-gray-300)] group-hover:border-[var(--duo-green)] group-hover:text-[var(--duo-green)]'
+                                                ? 'border-red-500 bg-red-50 translate-y-[2px] shadow-[0_0px_0_0_#ff0000]'
+                                                : 'border-[var(--duo-gray-200)]'
                                         }
+                                        ${!isDisabled && !isSelected
+                                            ? 'hover:border-[var(--duo-green)] hover:bg-[#F7FFF4] hover:-translate-y-[2px] hover:shadow-[0_4px_0_0_#58CC02,0_6px_8px_rgba(0,0,0,0.1)]'
+                                            : ''
+                                        }
+                                        ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                                        transition-all duration-75
+                                        ${!isDisabled ? 'active:translate-y-[2px] active:shadow-[0_0px_0_0_#58CC02]' : ''}
                                     `}
-                                />
-                                <span className={`
-                                    flex-1 text-lg font-bold transition-colors line-clamp-2
-                                    ${isSelected && !isIncorrect
-                                        ? 'text-[var(--duo-green)]'
-                                        : isSelected && isIncorrect
-                                        ? 'text-red-500'
-                                        : 'text-[var(--duo-gray-400)] group-hover:text-[var(--duo-green)]'
-                                    }
-                                `}>
-                                    {optionItem.text}
-                                </span>
-                            </Label>
-                        );
-                    })}
-                </RadioGroup>
+                                >
+                                    <RadioGroupItem
+                                        value={optionItem.text}
+                                        id={`option-${optionIndex}`}
+                                        disabled={isDisabled}
+                                        className={`
+                                            w-5 h-5 border-2 
+                                            ${isSelected && !isIncorrect
+                                                ? 'text-[var(--duo-green)] border-[var(--duo-green)]'
+                                                : isSelected && isIncorrect
+                                                    ? 'text-red-500 border-red-500'
+                                                    : 'text-[var(--duo-gray-300)] group-hover:border-[var(--duo-green)] group-hover:text-[var(--duo-green)]'
+                                            }
+                                        `}
+                                    />
+                                    <span className={`
+                                        flex-1 text-lg font-bold transition-colors line-clamp-2
+                                        ${isSelected && !isIncorrect
+                                            ? 'text-[var(--duo-green)]'
+                                            : isSelected && isIncorrect
+                                                ? 'text-red-500'
+                                                : 'text-[var(--duo-gray-400)] group-hover:text-[var(--duo-green)]'
+                                        }
+                                    `}>
+                                        {optionItem.text}
+                                    </span>
+                                </Label>
+                            );
+                        })}
+                    </RadioGroup>
+                ) : (
+                    <div className="flex items-center justify-center h-full">
+                        <div className="text-[var(--duo-gray-400)]">Loading question...</div>
+                    </div>
+                )}
             </div>
         </div>
     );

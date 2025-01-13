@@ -1,11 +1,11 @@
 "use client"
 
-import { useEnvironment } from "@/contexts/EnvironmentContext";
+import { useGlobal } from "@/contexts/GlobalContext";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export function TopBar() {
-    const { completionPercentage, lives } = useEnvironment();
+    const { completionPercentage, lives } = useGlobal();
     const [isWarning, setIsWarning] = useState(false);
 
     // Add warning animation when lives are low

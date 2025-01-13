@@ -5,11 +5,11 @@ import { Card } from "@/components/ui/card";
 import { ProgressGrid } from "@/components/ProgressGrid";
 import { BookOpen, BookmarkIcon } from "lucide-react";
 import { RatingFeedback } from "@/components/RatingFeedback";
-import { useEnvironment } from "@/contexts/EnvironmentContext";
+import { useGlobal } from "@/contexts/GlobalContext";
 import { useState } from "react";
 
 export function ProgressSection() {
-  const { index, setIndex, answeredQuestions, completionPercentage } = useEnvironment();
+  const { index, setIndex, answeredQuestions, completionPercentage } = useGlobal();
   const [showPopup, setShowPopup] = useState(false);
 
 

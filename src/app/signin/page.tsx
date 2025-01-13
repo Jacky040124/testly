@@ -1,9 +1,10 @@
 "use client"
 
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useEnvironment } from "@/contexts/EnvironmentContext";
+import { useGlobal } from "@/contexts/GlobalContext";
 import { signIn } from "@/app/action";
 import { ClientUser } from "@/types/User";
+
 
 type signInData = {
     email: string;
@@ -12,7 +13,7 @@ type signInData = {
 
 export default function SignIn() {
     const {register, handleSubmit} = useForm<signInData>();
-    const {user, setUser} = useEnvironment();
+    const {user, setUser} = useGlobal();
 
     const onSubmit: SubmitHandler<signInData> = async (data) => {
         const newUser: ClientUser | null = await signIn(data);

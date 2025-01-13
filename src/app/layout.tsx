@@ -1,17 +1,17 @@
 
 import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-import { EnvironmentProvider } from "@/contexts/EnvironmentContext";
+import { GlobalProvider } from "@/contexts/GlobalContext";
 
 export default function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {
     
   return (
     <html lang="en">
-      <EnvironmentProvider>
+      <GlobalProvider>
         <UserProvider>
           <body>{children}</body>
         </UserProvider>
-      </EnvironmentProvider>
+      </GlobalProvider>
     </html>
   );
 }

@@ -1,9 +1,9 @@
 "use client"
 
-import { useEnvironment } from "@/contexts/EnvironmentContext";
+import { useGlobal } from "@/contexts/GlobalContext";
 
 export function QuestionProgress() {
-    const { answeredQuestions, index } = useEnvironment();
+    const { answeredQuestions, index } = useGlobal();
     
     // Calculate completion based on non-empty answers
     const answeredCount = Object.values(answeredQuestions).filter(status => status !== "").length;

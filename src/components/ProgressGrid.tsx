@@ -1,9 +1,9 @@
 "use client";
 
-import { useEnvironment } from "@/contexts/EnvironmentContext";
+import { useGlobal } from "@/contexts/GlobalContext";
 
 export function ProgressGrid() {
-    const { answeredQuestions, index } = useEnvironment();
+    const { answeredQuestions, index } = useGlobal();
 
 
     return (

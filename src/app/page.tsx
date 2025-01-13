@@ -18,7 +18,7 @@ export default function Home() {
 
           {/* Right Column */}
           <div className="space-y-8">
-            {/* <QuestionCard /> */}
+            <QuestionCard />
             <AIChatBot />
           </div>
         </div>
