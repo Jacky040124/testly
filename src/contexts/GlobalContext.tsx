@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { fetchQuestions } from "@/app/action";
 import { QuestionSet } from "@/types/QuestionSet";
 import { ClientUser } from "@/types/User";
@@ -14,6 +14,7 @@ type GlobalContextType = {
     setIndex: (index: number) => void;
     lives: number;
     setLives: (lives: number) => void;
+    completionPercentage: number;
 };
 
 // TODO: lives should be part of the thing too
@@ -27,6 +28,13 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     const [questionSet, setQuestionSet] = useState<QuestionSet | null>(null);
     const [index, setIndex] = useState(1);
     const [lives, setLives] = useState(10);
+
+    // Calculate completion percentage based on answered questions
+    const completionPercentage = useMemo(() => {
+        if (!questionSet?.questions) return 0;
+        const answeredCount = questionSet.questions.filter(q => q.answer !== null).length;
+        return Math.round((answeredCount / 40) * 100);
+    }, [questionSet]);
 
     // update Qset
     useEffect(() => {
@@ -60,6 +68,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
         setIndex,
         lives,
         setLives,
+        completionPercentage,
     };
 
     return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>;

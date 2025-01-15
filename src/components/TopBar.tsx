@@ -17,7 +17,6 @@ export function TopBar() {
         }
     }, [lives]);
 
-
     return (
         <div className="flex items-center gap-6 mb-8">
             {/* Cross Button */}
@@ -44,27 +43,6 @@ export function TopBar() {
                     style={{ width: `${completionPercentage}%` }}
                 />
             </div>
-
-            {/* Heart Counter */}
-            <div
-                className={`
-                    flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300
-                    ${lives <= 3 ? 'bg-red-100' : 'bg-[#FFF5F5]'}
-                    ${isWarning ? 'animate-pulse' : ''}
-                `}
-            >
-                <span className="text-xl">❤️</span>
-                <span className={`
-                    font-bold 
-                    ${lives <= 3 ? 'text-red-500' : 'text-[var(--duo-gray-400)]'}
-                `}>
-                    {lives}
-                </span>
-            </div>
-
-            <Link href="/signin"> Sign in</Link>
-            <Link href="signup"> Sign up</Link>
-
         </div>
     );
 } 
