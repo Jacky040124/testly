@@ -12,6 +12,7 @@ export function QuestionCard() {
     const [selectedValue, setSelectedValue] = useState<string>("")
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
 
+
     // update currentQuestion
     useEffect(() => {
         console.log("QuestionSet:", questionSet);
@@ -21,6 +22,8 @@ export function QuestionCard() {
             setCurrentQuestion(questionSet.questions[index]);
         }
     }, [index, questionSet])
+
+    console.log("context questionSet:",questionSet);
 
 
     const handleSelect = (value: string) => {

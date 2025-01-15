@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { fetchQuestionSet } from "@/app/action";
+import { fetchQuestions } from "@/app/action";
 import { QuestionSet } from "@/types/QuestionSet";
 import { ClientUser } from "@/types/User";
 
@@ -28,16 +28,17 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     const [index, setIndex] = useState(1);
     const [lives, setLives] = useState(10);
 
-
     // update Qset
     useEffect(() => {
         const updateQuestionSet = async () => {
             try {
-                const rawData = await fetchQuestionSet(user?.id || null, id);
-                if (rawData) {
+                const questions = await fetchQuestions(user?.id || null, id);
+                console.log("questions:",questions);
+
+                if (questions) {
                     const newQuestionSet: QuestionSet = {
-                        id: rawData[0].id,
-                        questions: rawData[0].questions
+                        id: id.toString(),
+                        questions: questions
                     }
                     setQuestionSet(newQuestionSet);
                     console.log("udpate question set sucessful with", newQuestionSet);
