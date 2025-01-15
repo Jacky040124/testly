@@ -43,6 +43,22 @@ export function TopBar() {
                     style={{ width: `${completionPercentage}%` }}
                 />
             </div>
+
+            {/* Auth Buttons */}
+                <div className="flex gap-3">
+                    <Link 
+                        href="/signin" 
+                        className="duo-button-white px-4 py-2 text-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
+                    >
+                        Sign In
+                    </Link>
+                    <Link 
+                        href="/signup" 
+                        className="duo-button px-4 py-2 text-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
+                    >
+                        Sign Up
+                    </Link>
+                </div>
         </div>
     );
 } 
