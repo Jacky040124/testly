@@ -6,19 +6,21 @@ import { useGlobal } from "@/contexts/GlobalContext";
 import { useState } from "react";
 
 export function AIChatBot() {
-    const {question, setResult} = useGlobal();
+    const {questionSet, index} = useGlobal();
     const [isLoading, setIsLoading] = useState(false);
     const [chatResult, setChatResult] = useState("");
-
+    const currentQuestion = questionSet?.questions[index];
+    
     const handleChat = async (prompt: string) => {
         setIsLoading(true);
-        const content = `${prompt} for this question: "${question.text}" with options: ${question.options.map(opt => opt.text).join(", ")}`;
-        console.log("Sending to OpenAI:", content);
-        const result = await chat(content);
-        console.log("Received from OpenAI:", result);
-        setChatResult(result);
-        setResult(result);
-        setIsLoading(false);
+        if (currentQuestion) {
+            const content = `${prompt} for this question: "${currentQuestion.text}" with options: ${currentQuestion.options.map(opt => opt.text).join(", ")}`;
+            console.log("Sending to OpenAI:", content);
+            const result = await chat(content);
+            console.log("Received from OpenAI:", result);
+            setChatResult(result);
+            setIsLoading(false);
+        }
     }
 
     return (

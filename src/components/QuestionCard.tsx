@@ -8,31 +8,49 @@ import { Question } from "@/types/Question";
 
 export function QuestionCard() {
     const questionImageUrl = null;
-    const { index, questionSet, lives, setLives } = useGlobal();
-    const [selectedValue, setSelectedValue] = useState<string>("")
+    const { index, questionSet, lives, setLives, setQuestionSet } = useGlobal();
+    const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
 
-
-    // update currentQuestion
+    // update currentQuestion and selectedOptionId from questionSet
     useEffect(() => {
-        console.log("QuestionSet:", questionSet);
-        console.log("Index:", index);
         if (questionSet?.questions) {
-            console.log("Setting current question:", questionSet.questions[index]);
-            setCurrentQuestion(questionSet.questions[index]);
+            const question = questionSet.questions[index - 1];
+            setCurrentQuestion(question);
+            // If there's an existing answer, find the corresponding option ID
+            if (question.answer !== null) {
+                const optionId = question.options[question.answer]?.id || null;
+                setSelectedOptionId(optionId);
+            } else {
+                setSelectedOptionId(null);
+            }
         }
-    }, [index, questionSet])
-
-    console.log("context questionSet:",questionSet);
-
+    }, [index, questionSet]);
 
     const handleSelect = (value: string) => {
-        setSelectedValue(value);
+        console.log("Selected option id:", value);
+        setSelectedOptionId(value);
 
-        if (currentQuestion) {
-            const selectedOption = currentQuestion.options.find(opt => opt.text === value);
-            if (selectedOption) {
+        if (currentQuestion && questionSet) {
+            const selectedOptionIndex = currentQuestion.options.findIndex(opt => opt.id === value);
+            if (selectedOptionIndex !== -1) {
+                console.log("questionSet", questionSet);
+                console.log("selectedOptionIndex:", selectedOptionIndex);
+                const selectedOption = currentQuestion.options[selectedOptionIndex];
+                console.log("selectedOption:", selectedOption);
                 const isCorrect = selectedOption.isCorrect;
+                console.log("Selected option is correct:", isCorrect);
+
+                // Update the answer in questionSet
+                const updatedQuestions = [...questionSet.questions];
+                updatedQuestions[index - 1] = {
+                    ...currentQuestion,
+                    answer: selectedOptionIndex
+                };
+                setQuestionSet({
+                    ...questionSet,
+                    questions: updatedQuestions
+                });
 
                 // Only deduct life if this question hasn't been answered incorrectly before
                 if (!isCorrect && currentQuestion.answer == null) {
@@ -42,7 +60,6 @@ export function QuestionCard() {
             }
         }
     }
-
 
     if (lives === 0) {
         return (
@@ -100,20 +117,18 @@ export function QuestionCard() {
                 {currentQuestion && currentQuestion.options ? (
                     <RadioGroup
                         className="space-y-4"
-                        value={selectedValue}
+                        value={selectedOptionId || ""}
                         onValueChange={handleSelect}
                     >
                         {currentQuestion.options.map((optionItem, optionIndex) => {
-                            console.log("optionItem:", optionItem);
-                            console.log("optionIndex:", optionIndex);
-                            const isSelected = selectedValue === optionItem.text;
-                            const isDisabled = selectedValue !== "" && !isSelected;
-                            const isIncorrect = isSelected && optionItem.isCorrect;
+                            const isSelected = selectedOptionId === optionItem.id;
+                            const isDisabled = selectedOptionId !== null && !isSelected;
+                            const isIncorrect = isSelected && !optionItem.isCorrect;
 
                             return (
                                 <Label
-                                    key={`${optionIndex}-${optionItem.text}`}
-                                    htmlFor={`option-${optionIndex}`}
+                                    key={optionItem.id}
+                                    htmlFor={`option-${optionItem.id}`}
                                     className={`
                                         group flex items-center space-x-3 bg-white p-5 rounded-2xl border-2 
                                         ${isSelected && !isIncorrect
@@ -132,8 +147,8 @@ export function QuestionCard() {
                                     `}
                                 >
                                     <RadioGroupItem
-                                        value={optionItem.text}
-                                        id={`option-${optionIndex}`}
+                                        value={optionItem.id}
+                                        id={`option-${optionItem.id}`}
                                         disabled={isDisabled}
                                         className={`
                                             w-5 h-5 border-2 

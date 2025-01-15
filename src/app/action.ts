@@ -42,10 +42,11 @@ export async function fetchOptions(questionId: string): Promise<Option[]> {
             const newValue: Option = {
                 id: currentValue.option_id,
                 text: currentValue.text,
-                isCorrect: currentValue.isCorrect
+                isCorrect: currentValue.iscorrect === true
             }
+            console.log("newValue", newValue);
             return newValue;
-        },)
+        });
 
         console.log("fetch options success, data:", options);
         return options;

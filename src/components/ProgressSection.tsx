@@ -9,8 +9,10 @@ import { useGlobal } from "@/contexts/GlobalContext";
 import { useState } from "react";
 
 export function ProgressSection() {
-  const { index, setIndex, answeredQuestions, completionPercentage } = useGlobal();
+  const { index, setIndex } = useGlobal();
   const [showPopup, setShowPopup] = useState(false);
+  let completionPercentage = 50;
+  // TODO: implement feature [useMemo to cache previous resutl]
 
 
 
