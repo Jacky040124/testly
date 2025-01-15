@@ -9,51 +9,100 @@ const url = process.env.DATABASE_URL as string;
 const sql = neon(url);
 
 export async function fetchQuestions(userId: string | null, question_set_id: number) {
-    // update to fetch from attempted qset, if not attempted add to attemped
     try {
+        // Check if database URL is configured
+        if (!process.env.DATABASE_URL) {
+            throw new Error("Database URL is not configured");
+        }
+
+        // Fetch questions with error handling
         const rawData = await sql`SELECT * FROM questions WHERE question_set_id = ${question_set_id}`;
+        
+        if (!rawData || !Array.isArray(rawData)) {
+            throw new Error("Invalid data received from database");
+        }
 
         // parse json object into question array
         const questions = await Promise.all(rawData.map(async function (currentValue) {
-            const newValue: Question = {
-                id: currentValue.question_id,
-                text: currentValue.text,
-                answer: currentValue.answer,
-                topic: currentValue.topic,
-                difficulty: currentValue.difficulty,
-                options: await fetchOptions(currentValue.question_id)
+            try {
+                const options = await fetchOptions(currentValue.question_id);
+                
+                if (!options || !Array.isArray(options)) {
+                    throw new Error(`Failed to fetch options for question ${currentValue.question_id}`);
+                }
+
+                const newValue = {
+                    id: currentValue.question_id,
+                    text: currentValue.text,
+                    answer: currentValue.answer,
+                    topic: currentValue.topic,
+                    difficulty: currentValue.difficulty,
+                    options: options
+                };
+
+                return newValue;
+            } catch (optionError) {
+                console.error(`Error processing question ${currentValue.question_id}:`, optionError);
+                throw optionError;
             }
-            return newValue
-        }))
+        }));
 
+        if (!questions || !Array.isArray(questions)) {
+            throw new Error("Failed to process questions data");
+        }
 
-        console.log("fetch question set success, data:", questions);
         return questions;
-    } catch (e: any) {
-        console.log(e, "error fetch question set error", e)
+    } catch (error: any) {
+        // Log the error safely
+        console.error("Error fetching questions:", {
+            message: error.message,
+            code: error.code,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+
+        // In production, return a safe error message
+        if (process.env.NODE_ENV === 'production') {
+            throw new Error("Failed to fetch questions. Please try again later.");
+        } else {
+            throw error;
+        }
     }
 }
 
 export async function fetchOptions(questionId: string): Promise<Option[]> {
     try {
-        const rawData = await sql`SELECT *  FROM options WHERE question_id = ${questionId}`
+        if (!questionId) {
+            throw new Error("Question ID is required");
+        }
 
-        const options: Option[] = rawData.map(function (currentValue, index, array) {
+        const rawData = await sql`SELECT * FROM options WHERE question_id = ${questionId}`;
+
+        if (!rawData || !Array.isArray(rawData)) {
+            throw new Error(`Invalid options data for question ${questionId}`);
+        }
+
+        const options: Option[] = rawData.map(function (currentValue) {
             const newValue: Option = {
                 id: currentValue.option_id,
                 text: currentValue.text,
                 isCorrect: currentValue.iscorrect === true
-            }
-            console.log("newValue", newValue);
+            };
             return newValue;
         });
 
-        console.log("fetch options success, data:", options);
         return options;
+    } catch (error: any) {
+        console.error(`Error fetching options for question ${questionId}:`, {
+            message: error.message,
+            code: error.code,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
 
-    } catch (e: any) {
-        console.log(e, "error fetch options")
-        return [];
+        if (process.env.NODE_ENV === 'production') {
+            throw new Error(`Failed to fetch options. Please try again later.`);
+        } else {
+            throw error;
+        }
     }
 }
 
