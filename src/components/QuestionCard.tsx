@@ -11,11 +11,8 @@ export function QuestionCard() {
     const { index, questionSet, lives, setLives, setQuestionSet } = useGlobal();
     const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
-
-    useEffect(() => {
-        audioRef.current = new Audio('/path/to/click.mp3');
-    }, []);
+    const audioRefCorrect = useRef<HTMLAudioElement | null>(null);
+    const audioRefIncorrect = useRef<HTMLAudioElement | null>(null);
 
     // update currentQuestion and selectedOptionId from questionSet
     useEffect(() => {
@@ -32,24 +29,35 @@ export function QuestionCard() {
         }
     }, [index, questionSet]);
 
+    function handlePlaySound(isCorrect: boolean) {
+        if (isCorrect) {
+            if (audioRefCorrect.current) {
+                audioRefCorrect.current.currentTime = 0;  // Reset audio to start
+                audioRefCorrect.current.play().catch(error => {
+                    console.error("Error playing correct sound:", error);
+                });
+            }
+        } else {
+            if (audioRefIncorrect.current) {
+                audioRefIncorrect.current.currentTime = 0;  // Reset audio to start
+                audioRefIncorrect.current.play().catch(error => {
+                    console.error("Error playing incorrect sound:", error);
+                });
+            }
+        }
+    };
+
     const handleSelect = (value: string) => {
         console.log("Selected option id:", value);
         setSelectedOptionId(value);
 
-        if (audioRef.current) {
-            audioRef.current.play();
-        }
-
         if (currentQuestion && questionSet) {
             const selectedOptionIndex = currentQuestion.options.findIndex(opt => opt.id === value);
             if (selectedOptionIndex !== -1) {
-                console.log("questionSet", questionSet);
-                console.log("selectedOptionIndex:", selectedOptionIndex);
                 const selectedOption = currentQuestion.options[selectedOptionIndex];
-                console.log("selectedOption:", selectedOption);
                 const isCorrect = selectedOption.isCorrect;
-                console.log("Selected option is correct:", isCorrect);
-
+                
+                handlePlaySound(isCorrect)
                 // Update the answer in questionSet
                 const updatedQuestions = [...questionSet.questions];
                 updatedQuestions[index - 1] = {
@@ -88,6 +96,19 @@ export function QuestionCard() {
         <div className="h-[600px] flex flex-col border-2 border-[var(--duo-gray-200)] rounded-3xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
             {/* Header Section */}
             <div className="p-8 space-y-6">
+
+                <audio 
+                    ref={audioRefCorrect} 
+                    src="/clickCorrect.mp3" 
+                    preload="auto"
+                    onError={(e) => console.error("Error loading correct sound:", e)}
+                />
+                <audio 
+                    ref={audioRefIncorrect} 
+                    src="/clickIncorrect.mp3" 
+                    preload="auto"
+                    onError={(e) => console.error("Error loading incorrect sound:", e)}
+                />
                 {questionImageUrl && (
                     <div className="aspect-video w-full rounded-xl overflow-hidden bg-gray-100 border-2 border-[var(--duo-gray-200)] flex items-center justify-center">
                         <img
