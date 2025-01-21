@@ -113,10 +113,10 @@ export function QuestionCard() {
             </div>
 
             {/* Options Section - Scrollable if needed */}
-            <div className="flex-1 overflow-y-auto px-8 pb-8">
+            <div className="flex-1 overflow-y-auto px-8">
                 {currentQuestion && currentQuestion.options ? (
                     <RadioGroup
-                        className="space-y-4"
+                        className="space-y-6 py-1"
                         value={selectedOptionId || ""}
                         onValueChange={handleSelect}
                     >
