@@ -3,7 +3,7 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useGlobal } from "@/contexts/GlobalContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Question } from "@/types/Question";
 
 export function QuestionCard() {
@@ -11,6 +11,11 @@ export function QuestionCard() {
     const { index, questionSet, lives, setLives, setQuestionSet } = useGlobal();
     const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+
+    useEffect(() => {
+        audioRef.current = new Audio('/path/to/click.mp3');
+    }, []);
 
     // update currentQuestion and selectedOptionId from questionSet
     useEffect(() => {
@@ -30,6 +35,10 @@ export function QuestionCard() {
     const handleSelect = (value: string) => {
         console.log("Selected option id:", value);
         setSelectedOptionId(value);
+
+        if (audioRef.current) {
+            audioRef.current.play();
+        }
 
         if (currentQuestion && questionSet) {
             const selectedOptionIndex = currentQuestion.options.findIndex(opt => opt.id === value);
