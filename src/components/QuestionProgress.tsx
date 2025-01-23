@@ -1,9 +1,11 @@
 "use client"
 
 import { useGlobal } from "@/contexts/GlobalContext";
+import { useCompletionPercentage } from "@/hooks/useCalculatePercentage";
 
 export function QuestionProgress() {
-    const { questionSet, index, completionPercentage } = useGlobal();
+    const { questionSet, index } = useGlobal();
+    const completionPercentage = useCompletionPercentage();
     
     return (
         <div className="space-y-4">

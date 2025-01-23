@@ -7,10 +7,12 @@ import { BookOpen, BookmarkIcon } from "lucide-react";
 import { RatingFeedback } from "@/components/RatingFeedback";
 import { useGlobal } from "@/contexts/GlobalContext";
 import { useState } from "react";
+import { useCompletionPercentage } from "@/hooks/useCalculatePercentage";
 
 export function ProgressSection() {
-  const { index, setIndex,completionPercentage } = useGlobal();
+  const { index, setIndex } = useGlobal();
   const [showPopup, setShowPopup] = useState(false);
+  const completionPercentage = useCompletionPercentage();
 
 
 
