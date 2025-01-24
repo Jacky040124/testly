@@ -17,15 +17,17 @@ export function QuestionCard() {
 
     // update currentQuestion and selectedOptionId from questionSet
     useEffect(() => {
-        if (questionSet?.questions) {
+        if (questionSet.questions) {
             const question = questionSet.questions[index - 1];
             setCurrentQuestion(question);
             // If there's an existing answer, find the corresponding option ID
-            if (question.answer !== null) {
-                const optionId = question.options[question.answer]?.id || null;
-                setSelectedOptionId(optionId);
-            } else {
-                setSelectedOptionId(null);
+            if (question) {
+                if (question.answer !== null) {
+                    const optionId = question.options[question.answer]?.id || null;
+                    setSelectedOptionId(optionId);
+                } else {
+                    setSelectedOptionId(null);
+                }
             }
         }
     }, [index, questionSet]);

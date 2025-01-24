@@ -19,6 +19,8 @@ type GlobalContextType = {
 // TODO: lives should be part of the thing too
 export const GlobalContext = createContext<GlobalContextType | null>(null);
 
+
+// TODO: refactor this garbage away to hooks
 export function GlobalProvider({ children }: { children: React.ReactNode }) {
     // TODO : modify later
     const id = 1;
