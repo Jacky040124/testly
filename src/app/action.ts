@@ -51,24 +51,20 @@ export async function fetchQuestions(userId: string | null, question_set_id: num
         }
 
         return questions;
-    } catch (error: any) {
+    } catch (error: unknown) {
         // Log the error safely
-        console.error("Error fetching questions:", {
-            message: error.message,
-            code: error.code,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-        });
-
-        // In production, return a safe error message
-        if (process.env.NODE_ENV === 'production') {
-            throw new Error("Failed to fetch questions. Please try again later.");
+        if (error instanceof Error) {
+            console.error("Error fetching questions:", {
+                message: error.message,
+                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            });
         } else {
-            throw error;
+            console.error("Unknown error:",error)
         }
     }
 }
 
-export async function fetchOptions(questionId: string): Promise<Option[]> {
+export async function fetchOptions(questionId: string): Promise<Option[] | null> {
     try {
         if (!questionId) {
             throw new Error("Question ID is required");
@@ -88,23 +84,20 @@ export async function fetchOptions(questionId: string): Promise<Option[]> {
             };
             return newValue;
         });
-
         return options;
-    } catch (error: any) {
-        console.error(`Error fetching options for question ${questionId}:`, {
-            message: error.message,
-            code: error.code,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-        });
 
-        if (process.env.NODE_ENV === 'production') {
-            throw new Error(`Failed to fetch options. Please try again later.`);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error(`Error fetching options for question ${questionId}:`, {
+                message: error.message,
+                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            });
         } else {
-            throw error;
+            console.error("Unknown Error:",error)
         }
+        return null
     }
 }
-
 
 type authData = {
     email: string;

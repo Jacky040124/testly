@@ -50,7 +50,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
                     setQuestionSet(newQuestionSet);
                     console.log("udpate question set sucessful with", newQuestionSet);
                 }
-            } catch (e : any) {
+            } catch (e : unknown) {
                 console.log("udpate question set error",e)
             }
         }
