@@ -5,7 +5,7 @@ import { useCompletionPercentage } from "@/hooks/useCalculatePercentage";
 
 export function QuestionProgress() {
     const { questionSet, index } = useGlobal();
-    const completionPercentage = useCompletionPercentage();
+    const completionPercentage = useCompletionPercentage(questionSet);
     
     return (
         <div className="space-y-4">

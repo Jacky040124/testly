@@ -10,9 +10,9 @@ import { useState } from "react";
 import { useCompletionPercentage } from "@/hooks/useCalculatePercentage";
 
 export function ProgressSection() {
-  const { index, setIndex } = useGlobal();
+  const { index, setIndex, questionSet } = useGlobal();
   const [showPopup, setShowPopup] = useState(false);
-  const completionPercentage = useCompletionPercentage();
+  const completionPercentage = useCompletionPercentage(questionSet);
 
 
 

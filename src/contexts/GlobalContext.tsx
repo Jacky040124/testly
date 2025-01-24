@@ -8,8 +8,8 @@ import { ClientUser } from "@/types/User";
 type GlobalContextType = {
     user: ClientUser | null;
     setUser: (user: ClientUser | null) => void;
-    questionSet: QuestionSet | null;
-    setQuestionSet: (questionSet: QuestionSet | null) => void;
+    questionSet: QuestionSet;
+    setQuestionSet: (questionSet: QuestionSet) => void;
     index: number;
     setIndex: (index: number) => void;
     lives: number;
@@ -22,9 +22,13 @@ export const GlobalContext = createContext<GlobalContextType | null>(null);
 export function GlobalProvider({ children }: { children: React.ReactNode }) {
     // TODO : modify later
     let id = 1;
+    const initialQuestionSet: QuestionSet = {
+        id: "-1",
+        questions: []
+    }
 
     const [user, setUser] = useState<ClientUser | null>(null);
-    const [questionSet, setQuestionSet] = useState<QuestionSet | null>(null);
+    const [questionSet, setQuestionSet] = useState<QuestionSet>(initialQuestionSet);
     const [index, setIndex] = useState(1);
     const [lives, setLives] = useState(10);
 

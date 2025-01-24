@@ -125,7 +125,6 @@ async function verifyPassword(password: string, hashedPassword: string) {
 }
 
 export async function signIn(data: authData): Promise<null | ClientUser> {
-    console.log("received Sign in data:", data);
     const rawData = await sql`SELECT * FROM users WHERE email = ${data.email}`;
     const user = rawData[0];
 

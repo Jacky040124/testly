@@ -1,9 +1,8 @@
 import { useMemo } from "react";
-import { useGlobal } from "@/contexts/GlobalContext";
+import { QuestionSet } from "@/types/QuestionSet";
 
 // Calculate completion percentage based on answered questions
-export const useCompletionPercentage = (): number => {
-  const { questionSet } = useGlobal();
+export function useCompletionPercentage(questionSet : QuestionSet): number {
 
   return useMemo(() => {
     if (!questionSet) {
@@ -12,4 +11,5 @@ export const useCompletionPercentage = (): number => {
     const answeredCount = questionSet.questions.filter((q) => q.answer !== null).length;
     return Math.round((answeredCount / 40) * 100);
   }, [questionSet]);
+
 };

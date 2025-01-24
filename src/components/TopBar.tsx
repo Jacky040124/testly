@@ -6,9 +6,9 @@ import { useCompletionPercentage } from "@/hooks/useCalculatePercentage";
 import Link from "next/link";
 
 export function TopBar() {
-  const { lives } = useGlobal();
+  const { lives,questionSet} = useGlobal();
   const [isWarning,setIsWarning] = useState(false);
-  const completionPercentage = useCompletionPercentage();
+  const completionPercentage = useCompletionPercentage(questionSet);
 
   // Add warning animation when lives are low
   useEffect(() => {
