@@ -5,7 +5,7 @@ import { QuestionSet } from "@/types/QuestionSet";
 export function useCompletionPercentage(questionSet : QuestionSet): number {
 
   return useMemo(() => {
-    if (!questionSet) {
+    if (!questionSet || questionSet.id == "-1") {
       return 0;
     }
     const answeredCount = questionSet.questions.filter((q) => q.answer !== null).length;

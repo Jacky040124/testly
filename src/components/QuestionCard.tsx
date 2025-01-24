@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { useGlobal } from "@/contexts/GlobalContext";
 import { useState, useEffect, useRef } from "react";
 import { Question } from "@/types/Question";
+import Image from "next/image";
 
 export function QuestionCard() {
     const questionImageUrl = null;
@@ -111,7 +112,7 @@ export function QuestionCard() {
                 />
                 {questionImageUrl && (
                     <div className="aspect-video w-full rounded-xl overflow-hidden bg-gray-100 border-2 border-[var(--duo-gray-200)] flex items-center justify-center">
-                        <img
+                        <Image
                             src={questionImageUrl}
                             alt="Question illustration"
                             className="w-full h-full object-cover"
@@ -150,7 +151,7 @@ export function QuestionCard() {
                         value={selectedOptionId || ""}
                         onValueChange={handleSelect}
                     >
-                        {currentQuestion.options.map((optionItem, optionIndex) => {
+                        {currentQuestion.options.map((optionItem) => {
                             const isSelected = selectedOptionId === optionItem.id;
                             const isDisabled = selectedOptionId !== null && !isSelected;
                             const isIncorrect = isSelected && !optionItem.isCorrect;

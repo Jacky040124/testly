@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { fetchQuestions } from "@/app/action";
 import { QuestionSet } from "@/types/QuestionSet";
 import { ClientUser } from "@/types/User";
@@ -21,7 +21,7 @@ export const GlobalContext = createContext<GlobalContextType | null>(null);
 
 export function GlobalProvider({ children }: { children: React.ReactNode }) {
     // TODO : modify later
-    let id = 1;
+    const id = 1;
     const initialQuestionSet: QuestionSet = {
         id: "-1",
         questions: []

@@ -2,7 +2,6 @@
 
 import { neon } from "@neondatabase/serverless";
 import { Option } from "@/types/Question";
-import { Question } from "@/types/Question";
 import { ClientUser } from "@/types/User";
 import bcrypt from "bcrypt";
 const url = process.env.DATABASE_URL as string;
@@ -150,7 +149,7 @@ export async function signIn(data: authData): Promise<null | ClientUser> {
     return newUser;
 }
 
-export async function signUp(data: authData): Promise<Boolean> {
+export async function signUp(data: authData): Promise<boolean> {
     // insertion
     await sql`INSERT INTO users(id, email, passwordhash, membership) 
               VALUES (${crypto.randomUUID()},${data.email},${await hashPassword(data.password)},false)`;

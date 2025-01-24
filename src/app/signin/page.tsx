@@ -13,7 +13,7 @@ type signInData = {
 
 export default function SignIn() {
     const { register, handleSubmit, formState: { errors } } = useForm<signInData>();
-    const { user, setUser } = useGlobal();
+    const { setUser } = useGlobal();
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 

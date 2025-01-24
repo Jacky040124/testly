@@ -1,5 +1,3 @@
-import OpenAI from 'openai';
-
 export async function chat(content: string) {
   try {
     const response = await fetch("/api/openai-chatbot", {

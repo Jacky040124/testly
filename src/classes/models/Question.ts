@@ -1,4 +1,3 @@
-import { Question as QuestionType } from "@/types/Question";
 
 export class Question {
     private text: string;
