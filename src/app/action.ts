@@ -7,14 +7,10 @@ import bcrypt from "bcrypt";
 const url = process.env.DATABASE_URL as string;
 const sql = neon(url);
 
+
+
 export async function fetchQuestions(userId: string | null, question_set_id: number) {
     try {
-        // Check if database URL is configured
-        if (!process.env.DATABASE_URL) {
-            throw new Error("Database URL is not configured");
-        }
-
-        // Fetch questions with error handling
         const rawData = await sql`SELECT * FROM questions WHERE question_set_id = ${question_set_id}`;
         
         if (!rawData || !Array.isArray(rawData)) {
@@ -52,7 +48,6 @@ export async function fetchQuestions(userId: string | null, question_set_id: num
 
         return questions;
     } catch (error: unknown) {
-        // Log the error safely
         if (error instanceof Error) {
             console.error("Error fetching questions:", {
                 message: error.message,

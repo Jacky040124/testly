@@ -3,22 +3,22 @@
 @tailwind utilities;
 
 :root {
-  --duo-green: #58CC02;
-  --duo-green-hover: #47B502;
-  --duo-background: #FFF;
-  --duo-gray-100: #F7F7F7;
-  --duo-gray-200: #E5E5E5;
-  --duo-gray-300: #AFAFAF;
+  --duo-green: #58cc02;
+  --duo-green-hover: #47b502;
+  --duo-background: #fff;
+  --duo-gray-100: #f7f7f7;
+  --duo-gray-200: #e5e5e5;
+  --duo-gray-300: #afafaf;
   --duo-gray-400: #777777;
-  --duo-correct: #58CC02;
-  --duo-incorrect: #FF4B4B;
-  --duo-blue: #1CB0F6;
-  --duo-blue-hover: #14A1E3;
+  --duo-correct: #58cc02;
+  --duo-incorrect: #ff4b4b;
+  --duo-blue: #1cb0f6;
+  --duo-blue-hover: #14a1e3;
 }
 
 body {
   background-color: var(--duo-background);
-  font-family: 'DIN Round Pro', system-ui, sans-serif;
+  font-family: "DIN Round Pro", system-ui, sans-serif;
 }
 
 .duo-button {
@@ -54,4 +54,11 @@ body {
 
 .duo-button-blue:hover {
   background-color: var(--duo-blue-hover);
+}
+
+.animation-delay-150 {
+  animation-delay: 150ms;
+}
+.animation-delay-300 {
+  animation-delay: 300ms;
 }

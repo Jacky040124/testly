@@ -1,10 +1,11 @@
-
 import { TopBar } from "@/components/TopBar";
 import { QuestionCard } from "@/components/QuestionCard";
 import { ProgressSection } from "@/components/ProgressSection";
 import { AIChatBot } from "@/components/AIChatBot";
 
-export default function Home() {  
+export default function Home() {
+
+
   return (
     <div className="min-h-screen bg-[var(--duo-background)] p-6 font-['DIN Round Pro']">
       <div className="max-w-[1200px] mx-auto">
@@ -16,7 +17,8 @@ export default function Home() {
 
           {/* Right Column */}
           <div className="space-y-8">
-            <QuestionCard />
+              <QuestionCard />
+
             <AIChatBot />
           </div>
         </div>

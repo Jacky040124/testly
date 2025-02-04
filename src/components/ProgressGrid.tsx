@@ -25,11 +25,11 @@ export function ProgressGrid() {
                         key={questionNumber}
                         className={`
                             h-10 flex items-center justify-center rounded-xl text-sm font-bold
-                            ${questionNumber === index ? 'border-2 border-[#1cb0f6] bg-white' : ''}
+                            ${questionNumber === index ? 'border-2 border-[#1cb0f6]' : ''}
                             ${correctness === null
                                 ? "bg-[#f0f0f0] text-[var(--duo-gray-400)]" 
                                 : correctness
-                                    ? "bg-[#E5F6D3] text-[var(--duo-green)]" 
+                                    ? "bg-[#E5F6D3] text-[var(--duo-correct)]" 
                                     : "bg-[var(--duo-incorrect)] text-white"}
                             transition-all duration-200
                         `}
