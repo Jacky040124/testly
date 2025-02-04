@@ -14,6 +14,8 @@ type GlobalContextType = {
   setIndex: (index: number) => void;
   lives: number;
   setLives: (lives: number) => void;
+  isLoading:  boolean;
+  setIsLoading: (isLoading: boolean) => void
 };
 
 // TODO: lives should be part of the thing too
@@ -28,6 +30,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   const [questionSet, setQuestionSet] = useState<QuestionSet>(initialQuestionSet);
   const [index, setIndex] = useState(1);
   const [lives, setLives] = useState(10);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fix suspension
 
@@ -50,8 +53,9 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
         console.log("udpate question set error", e);
       }
     };
-
+    setIsLoading(true)
     updateQuestionSet();
+    setIsLoading(false)
   }, [user]);
 
   const value = {
@@ -63,6 +67,8 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     setIndex,
     lives,
     setLives,
+    isLoading,
+    setIsLoading,
   };
 
   return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>;

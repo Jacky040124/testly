@@ -5,11 +5,12 @@ import { Label } from "@/components/ui/label";
 import { useGlobal } from "@/contexts/GlobalContext";
 import { useState, useEffect, useRef } from "react";
 import { Question } from "@/types/Question";
+import Loading from "@/app/loading";
 import Image from "next/image";
 
 export function QuestionCard() {
   const questionImageUrl = null;
-  const { index, questionSet, lives, setLives, setQuestionSet } = useGlobal();
+  const { index, questionSet, lives, setLives, setQuestionSet, isLoading} = useGlobal();
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const audioRefCorrect = useRef<HTMLAudioElement | null>(null);
@@ -83,7 +84,12 @@ export function QuestionCard() {
     }
   };
 
-
+  if (isLoading) {
+    console.log("is loading")
+    return (
+        <Loading/>
+    )
+  }
 
   if (lives === 0) {
     return (
