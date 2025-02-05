@@ -14,8 +14,8 @@ type GlobalContextType = {
   setIndex: (index: number) => void;
   lives: number;
   setLives: (lives: number) => void;
-  isLoading:  boolean;
-  setIsLoading: (isLoading: boolean) => void
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
 };
 
 // TODO: lives should be part of the thing too
@@ -53,9 +53,8 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
         console.log("udpate question set error", e);
       }
     };
-    setIsLoading(true)
     updateQuestionSet();
-    setIsLoading(false)
+    setIsLoading(false);
   }, [user]);
 
   const value = {
