@@ -3,10 +3,6 @@ import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signUp, authState } from "@/app/action";
 import { useGlobal } from "@/contexts/GlobalContext";
-type signInData = {
-    email: string;
-    password: string;
-}
 
 export default function SignUp() {
     const router = useRouter();
@@ -14,11 +10,11 @@ export default function SignUp() {
     const [state, formAction, isPending] = useActionState<authState, FormData>(signUp, { error: null, user: null });
 
     useEffect(() => {
-        if (state.user) {
-            setUser(state.user);
-            router.push("/signin");
-        }
-    }, [state.user, router]);
+      if (state.user) {
+        setUser(state.user);
+        router.push("/signin");
+      }
+    }, [state.user, router, setUser]);
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">

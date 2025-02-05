@@ -2,15 +2,9 @@
 
 import { useGlobal } from "@/contexts/GlobalContext";
 import { signIn } from "@/app/action";
-import { ClientUser } from "@/types/User";
-import { useState, useActionState, useEffect } from "react";
+import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { authState } from "@/app/action";
-
-type signInData = {
-  email: string;
-  password: string;
-};
 
 export default function SignIn() {
   const { setUser } = useGlobal();

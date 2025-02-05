@@ -95,11 +95,6 @@ export async function fetchOptions(questionId: string): Promise<Option[] | null>
 
 // auth service
 
-type authData = {
-  email: string;
-  password: string;
-};
-
 export type authState = {
   error: string | null;
   user: ClientUser | null;
