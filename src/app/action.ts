@@ -93,9 +93,16 @@ export async function fetchOptions(questionId: string): Promise<Option[] | null>
   }
 }
 
+// auth service
+
 type authData = {
   email: string;
   password: string;
+};
+
+export type authState = {
+  error: string | null;
+  user: ClientUser | null;
 };
 
 async function hashPassword(password: string) {
@@ -109,18 +116,23 @@ async function verifyPassword(password: string, hashedPassword: string) {
   return isMatch;
 }
 
-export async function signIn(data: authData): Promise<null | ClientUser> {
-  const rawData = await sql`SELECT * FROM users WHERE email = ${data.email}`;
+async function checkUserExists(email: string): Promise<boolean> {
+  const result = await sql`SELECT EXISTS(SELECT 1 FROM users WHERE email = ${email})`;
+  return result[0].exists;
+}
+
+export async function signIn(previousState: authState | null, formData: FormData): Promise<authState> {
+  const email = formData.get('email') as string;
+  const password = formData.get("password") as string;
+  const rawData = await sql`SELECT * FROM users WHERE email = ${email}`;
   const user = rawData[0];
 
-  if (user == null) {
-    console.log("user doesn't exist");
-    return null;
+  if (!user) {
+    return { error: "User not found", user: null };
   }
 
-  if (!(await verifyPassword(data.password, user.passwordhash))) {
-    console.log("wrong password");
-    return null;
+  if (!(await verifyPassword(password, user.passwordhash))) {
+    return { error: "wrong password", user: null };
   }
 
   console.log(user);
@@ -132,24 +144,38 @@ export async function signIn(data: authData): Promise<null | ClientUser> {
     preferences: user.preferences,
   };
 
-  return newUser;
+  return { error: null, user: newUser };
 }
 
-export async function signUp(data: authData): Promise<boolean> {
-  // insertion
+export async function signUp(previousState: authState | null, formData: FormData): Promise<authState> {
+  const email = formData.get('email') as string;
+  const password = formData.get("password") as string;
+
+  if (await checkUserExists(email)) {
+    return { error: "User already exists", user: null };
+  }
+
   await sql`INSERT INTO users(id, email, passwordhash, membership) 
-              VALUES (${crypto.randomUUID()},${data.email},${await hashPassword(data.password)},false)`;
+              VALUES (${crypto.randomUUID()},${email},${await hashPassword(password)},false)`;
 
   // verificaiton
-  const rawData = await sql`SELECT * FROM users WHERE email = ${data.email}`;
+  const rawData = await sql`SELECT * FROM users WHERE email = ${email}`;
   const user = rawData[0];
 
   if (user == null) {
     console.log("fail to create");
-    return false;
+    return { error: "fail to create", user: null };
   }
 
-  return true;
+  const newUser: ClientUser = {
+    id: user.id,
+    email: user.email,
+    membership: user.membership,
+    attemptedQuestionSets: user.attemptedQuestionSets,
+    preferences: user.preferences,
+  };
+
+  return { error: null, user: newUser };
 }
 
 // open ai service
@@ -181,14 +207,13 @@ import { Resend } from "resend";
 import { EmailTemplate } from "@/lib/EmailTemplate";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-
 export async function send(feedback: string) {
   try {
     await resend.emails.send({
       from: "Acme <onboarding@resend.dev>",
       to: ["zhongzhenyu190@gmail.com"],
       subject: "feedback",
-      react: EmailTemplate({ feedback: feedback }),
+      react: EmailTemplate({ feedback: feedback }) as React.ReactNode,
     });
   } catch (error) {
     console.error("Error sending email:", error);
