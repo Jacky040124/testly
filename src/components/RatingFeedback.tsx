@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Star, MessageSquarePlus } from "lucide-react";
-import { sendMail } from "@/service/mail.service";
+import { send } from "@/app/action";
 
 export function RatingFeedback() {
   // TODO: implement sending user feedback
@@ -30,7 +30,7 @@ export function RatingFeedback() {
     if (feedbackText.trim()) {
       setHasSentFeedback(true);
       setShowFeedback(false);
-      sendMail(feedbackText, "zhongzhenyu190@gmail.com", "zhongzhenyu190@gmail.com");
+      send(feedbackText);
       console.log("Feedback submitted:", feedbackText);
       setFeedbackText(""); // Clear the input after submission
     }

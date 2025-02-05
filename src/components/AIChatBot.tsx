@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { chat } from "@/service/chat.service"
+import { chat } from "@/app/action"
 import { useGlobal } from "@/contexts/GlobalContext";
 import { useState } from "react";
 
@@ -18,7 +18,7 @@ export function AIChatBot() {
             console.log("Sending to OpenAI:", content);
             const result = await chat(content);
             console.log("Received from OpenAI:", result);
-            setChatResult(result);
+            setChatResult(result.content || "");
             setIsLoading(false);
         }
     }
