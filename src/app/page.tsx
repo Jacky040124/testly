@@ -5,7 +5,6 @@ import { AIChatBot } from "@/components/AIChatBot";
 
 export default function Home() {
 
-
   return (
     <div className="min-h-screen bg-[var(--duo-background)] p-6 font-['DIN Round Pro']">
       <div className="max-w-[1200px] mx-auto">
