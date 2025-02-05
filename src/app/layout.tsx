@@ -5,11 +5,11 @@ import { GlobalProvider } from "@/contexts/GlobalContext";
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <GlobalProvider>
-        <UserProvider>
-          <body>{children}</body>
-        </UserProvider>
-      </GlobalProvider>
+      <body>
+          <GlobalProvider>
+            <UserProvider>{children}</UserProvider>
+          </GlobalProvider>
+      </body>
     </html>
   );
 }

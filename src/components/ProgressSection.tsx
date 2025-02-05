@@ -15,7 +15,6 @@ export function ProgressSection() {
   const completionPercentage = useCompletionPercentage(questionSet);
 
 
-
   const handleFeatureClick = () => {
     setShowPopup(true);
     setTimeout(() => setShowPopup(false), 2000);
