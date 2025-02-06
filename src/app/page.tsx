@@ -1,9 +1,15 @@
+"use server";
+
 import { TopBar } from "@/components/TopBar";
 import { QuestionCard } from "@/components/QuestionCard";
 import { ProgressSection } from "@/components/ProgressSection";
 import { AIChatBot } from "@/components/AIChatBot";
+import { auth } from "@/lib/auth";
 
-export default function Home() {
+export default async function Home() {
+    const session = await auth();
+    console.log(session);
+
 
   return (
     <div className="min-h-screen bg-[var(--duo-background)] p-6 font-['DIN Round Pro']">

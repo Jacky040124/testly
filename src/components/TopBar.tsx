@@ -3,11 +3,11 @@
 import { useGlobal } from "@/contexts/GlobalContext";
 import { useEffect, useState } from "react";
 import { useCompletionPercentage } from "@/hooks/useCalculatePercentage";
-import Link from "next/link";
+import SignInButton from "./SigInButton";
 
 export function TopBar() {
-  const { lives,questionSet} = useGlobal();
-  const [isWarning,setIsWarning] = useState(false);
+  const { lives, questionSet } = useGlobal();
+  const [isWarning, setIsWarning] = useState(false);
   const completionPercentage = useCompletionPercentage(questionSet);
   console.log(isWarning);
 
@@ -49,18 +49,7 @@ export function TopBar() {
 
       {/* Auth Buttons */}
       <div className="flex gap-3">
-        <Link
-          href="/signin"
-          className="duo-button-white px-4 py-2 text-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
-        >
-          Sign In
-        </Link>
-        <Link
-          href="/signup"
-          className="duo-button px-4 py-2 text-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
-        >
-          Sign Up
-        </Link>
+        <SignInButton />
       </div>
     </div>
   );
