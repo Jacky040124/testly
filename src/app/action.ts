@@ -2,10 +2,11 @@
 
 import { neon } from "@neondatabase/serverless";
 import { Option } from "@/types/Question";
-import { ClientUser } from "@/types/User";
-import bcrypt from "bcrypt";
+
 const url = process.env.DATABASE_URL as string;
 const sql = neon(url);
+
+// question service
 
 export async function fetchQuestions(userId: string | null, question_set_id: number) {
   try {
@@ -93,98 +94,12 @@ export async function fetchOptions(questionId: string): Promise<Option[] | null>
   }
 }
 
-// auth service
-
-export type authState = {
-  error: string | null;
-  user: ClientUser | null;
-};
-
-async function hashPassword(password: string) {
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
-  return hashedPassword;
-}
-
-async function verifyPassword(password: string, hashedPassword: string) {
-  const isMatch = await bcrypt.compare(password, hashedPassword);
-  return isMatch;
-}
-
-async function checkUserExists(email: string): Promise<boolean> {
-  const result = await sql`SELECT EXISTS(SELECT 1 FROM users WHERE email = ${email})`;
-  return result[0].exists;
-}
-
-export async function signIn(previousState: authState | null, formData: FormData): Promise<authState> {
-  const email = formData.get('email') as string;
-  const password = formData.get("password") as string;
-  const rawData = await sql`SELECT * FROM users WHERE email = ${email}`;
-  const user = rawData[0];
-
-  if (!user) {
-    return { error: "User not found", user: null };
-  }
-
-  if (!(await verifyPassword(password, user.passwordhash))) {
-    return { error: "wrong password", user: null };
-  }
-
-  console.log(user);
-  const newUser: ClientUser = {
-    id: user.id,
-    email: user.email,
-    membership: user.membership,
-    attemptedQuestionSets: user.attemptedQuestionSets,
-    preferences: user.preferences,
-  };
-
-  return { error: null, user: newUser };
-}
-
-export async function signUp(previousState: authState | null, formData: FormData): Promise<authState> {
-  const email = formData.get('email') as string;
-  const password = formData.get("password") as string;
-
-  if (await checkUserExists(email)) {
-    return { error: "User already exists", user: null };
-  }
-
-  await sql`INSERT INTO users(id, email, passwordhash, membership) 
-              VALUES (${crypto.randomUUID()},${email},${await hashPassword(password)},false)`;
-
-  // verificaiton
-  const rawData = await sql`SELECT * FROM users WHERE email = ${email}`;
-  const user = rawData[0];
-
-  if (user == null) {
-    console.log("fail to create");
-    return { error: "fail to create", user: null };
-  }
-
-  const newUser: ClientUser = {
-    id: user.id,
-    email: user.email,
-    membership: user.membership,
-    attemptedQuestionSets: user.attemptedQuestionSets,
-    preferences: user.preferences,
-  };
-
-  return { error: null, user: newUser };
-}
 
 // open ai service
 import OpenAI from "openai";
 
-// Check if API key exists
 const apiKey = process.env.OPENAI_API_KEY;
-if (!apiKey) {
-  throw new Error("OPENAI_API_KEY is not configured in environment variables");
-}
-
-const openai = new OpenAI({
-  apiKey: apiKey,
-});
+const openai = new OpenAI({apiKey: apiKey,});
 
 export async function chat(content: string) {
   console.log("Chat request content:", content);
