@@ -9,6 +9,7 @@ export function TopBar() {
   const { lives, questionSet } = useGlobal();
   const [isWarning, setIsWarning] = useState(false);
   const completionPercentage = useCompletionPercentage(questionSet);
+  console.log(isWarning);
 
   // Add warning animation when lives are low
   useEffect(() => {
