@@ -1,64 +1,53 @@
-# Test Management System
+# Testly - Interactive Learning Platform
 
 ## Overview
-This project is a comprehensive test management system built with modern web technologies. It provides a platform for creating, managing, and analyzing test questions with a robust architecture focusing on scalability and user experience.
+Testly is an interactive learning platform built with modern web technologies, featuring a Duolingo-inspired interface for engaging test preparation. The platform focuses on providing an intuitive user experience with real-time feedback and AI-powered assistance.
 
 ## Architecture
 
 ### Technology Stack
-- **Frontend**: Next.js with React
-- **Backend**: Node.js hosted on Vercel
-- **Database**: 
-  - PostgreSQL Server
-  - Neon SQL Database
+- **Frontend**: Next.js 15.1 with React 18
+- **Backend**: Next.js API Routes
+- **Database**: Neon SQL Database
 - **External Services**:
-  - Lucia API for Authentication
-  - Stripe API for Payment Processing
+  - Google OAuth for Authentication
+  - OpenAI API for AI Assistant
   - Resend API for Email Services
 
-### System Architecture Diagram
-![Architecture Diagram](./ArchitectureDiagram.png)
-*System architecture showing the interaction between frontend, API routes, databases, and external services*
-
-### Class Structure
-![UML Class Diagram](./ClassUML.png)
-*UML class diagram showing the system's core components and their relationships*
-
 ### Key Components
-- **Frontend Layer**: Built with Next.js, providing a responsive and interactive user interface
-- **API Layer**: RESTful API endpoints hosted on Vercel, handling business logic and data operations
-- **Data Layer**: Dual database system with PostgreSQL and Neon SQL for robust data management
-- **Authentication**: Secure user authentication handled by Lucia API
-- **Payment Processing**: Integrated Stripe API for handling transactions
-- **Email Services**: Automated email functionality using Resend API
+- **Frontend Layer**: Responsive UI with Tailwind CSS and Radix UI components
+- **Authentication**: Secure authentication using NextAuth.js with Google provider
+- **AI Integration**: GPT-powered chatbot for interactive learning assistance
+- **Progress Tracking**: Real-time progress monitoring and feedback system
+- **Email Services**: Automated feedback collection using Resend API
 
 ## Core Features
-Based on the UML design, the system includes:
-- User Management System
-- Question Set Management
-- Test Creation and Management
-- Progress Tracking
-- Interactive UI Components
-- Environment Configuration
-- User Context Management
+- Interactive Question Interface
+- Real-time Progress Tracking
+- AI-powered Learning Assistant
+- User Authentication
+- Progress Grid Visualization
+- Rating & Feedback System
+- Lives System
+- Sound Effects
 
 ## Project Structure
 ```
 ├── src/
-│   ├── components/    # React components
-│   ├── pages/        # Next.js pages
-│   └── contexts/     # React contexts
-├── Classes/          # Core business logic classes
-├── Tests/           # Test suites
-├── public/          # Static assets
-└── config/          # Configuration files
+│   ├── app/          # Next.js app router pages
+│   ├── components/   # React components
+│   ├── contexts/     # Global state management
+│   ├── hooks/        # Custom React hooks
+│   ├── lib/          # Utility functions
+│   └── types/        # TypeScript definitions
+├── public/           # Static assets
+└── config/           # Configuration files
 ```
 
 ## Getting Started
 
 ### Prerequisites
 - Node.js (v16 or higher)
-- PostgreSQL
 - npm or yarn
 
 ### Installation
@@ -70,39 +59,36 @@ git clone [repository-url]
 2. Install dependencies
 ```bash
 npm install
-# or
-yarn install
 ```
 
 3. Set up environment variables
-```bash
-cp .env.example .env.local
+Create a `.env.local` file with:
 ```
-Configure the following variables:
-- Database credentials
-- API keys for Lucia, Stripe, and Resend
-- Other environment-specific configurations
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+OPENAI_API_KEY=
+RESEND_API_KEY=
+```
 
 4. Run the development server
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-## Testing
-Run the test suite:
-```bash
-npm test
-# or
-yarn test
-```
+## Development
 
-## Deployment
-The application is configured for deployment on Vercel. Follow these steps:
-1. Connect your repository to Vercel
-2. Configure environment variables
-3. Deploy
+### Key Technologies
+- **Styling**: Tailwind CSS with custom variables
+- **Components**: Mix of custom components and shadcn/ui
+- **State Management**: React Context API
+- **Form Handling**: React Hook Form
+- **Testing**: Vitest with React Testing Library
+
+### Scripts
+- `npm run dev` - Start development server with Turbopack
+- `npm run build` - Create production build
+- `npm run test` - Run test suite with coverage
+- `npm run lint` - Run ESLint checks
 
 ## Contributing
 1. Fork the repository
@@ -112,7 +98,7 @@ The application is configured for deployment on Vercel. Follow these steps:
 5. Create a Pull Request
 
 ## License
-[Your License Here]
+MIT License
 
 ## Contact
-[Your Contact Information]
+For support or inquiries, please open an issue in the repository.
