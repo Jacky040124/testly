@@ -8,7 +8,6 @@ import { Star, MessageSquarePlus } from "lucide-react";
 import { send } from "@/app/action";
 
 export function RatingFeedback() {
-  // TODO: implement sending user feedback
   const [showFeedback, setShowFeedback] = useState(false);
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
