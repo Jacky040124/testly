@@ -9,7 +9,7 @@ export function AIChatBot() {
     const {questionSet, index} = useGlobal();
     const [isLoading, setIsLoading] = useState(false);
     const [chatResult, setChatResult] = useState("");
-    const currentQuestion = questionSet?.questions[index];
+    const currentQuestion = questionSet?.questions[index-1];
     
     const handleChat = async (prompt: string) => {
         setIsLoading(true);
